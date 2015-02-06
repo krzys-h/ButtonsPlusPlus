@@ -11,4 +11,9 @@ public class ItemButtonLabel extends Item {
 		setCreativeTab(CreativeTab.buttons);
 		setUnlocalizedName(Names.Items.BUTTON_LABEL);
 	}
+	
+	@Override
+	public void registerIcons(IIconRegister iconreg)
+	{
+	}
 }
