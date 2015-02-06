@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
@@ -24,6 +25,7 @@ import codechicken.multipart.IFaceRedstonePart;
 import codechicken.multipart.minecraft.McBlockPart;
 import codechicken.multipart.minecraft.McSidedMetaPart;
 
+//TODO: A lot of code is duplicated in BlockButton
 public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
 {
 	private TileEntityButton tile;
@@ -196,6 +198,14 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
     @Override
     public int getLightValue()
     {
-    	return tile.active ? 7 : 0; //TODO: for whaever reason this is buggy
+    	return tile.active ? 7 : 0; //TODO: for whatever reason this is buggy
+    }
+    
+    @Override
+    public ItemStack pickItem(MovingObjectPosition hit)
+    {
+    	ItemStack stack = new ItemStack(Item.getItemFromBlock(ModBlocks.button));
+    	tile.toItem(stack);
+    	return stack;
     }
 }

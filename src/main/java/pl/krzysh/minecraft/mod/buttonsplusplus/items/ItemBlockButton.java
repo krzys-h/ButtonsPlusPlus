@@ -40,10 +40,10 @@ public class ItemBlockButton extends ItemBlock {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
         if (itemstack.stackTagCompound != null) {
-        	String text = itemstack.stackTagCompound.hasKey("text") ? itemstack.stackTagCompound.getString("text") : null;
+        	String text = itemstack.stackTagCompound.getString("text");
         	String base = itemstack.stackTagCompound.getString("base");
         	String click = itemstack.stackTagCompound.getString("click");
-        	if(text != null) {
+        	if(!text.isEmpty()) {
         		list.add("Text: "+text);
         	}
         	list.add("Base: "+base);

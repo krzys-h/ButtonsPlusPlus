@@ -18,12 +18,8 @@ public class TileEntityButton extends TileEntity {
 	public String base = "cube";
 	public String click = "round";
 	public String text = "OK";
-
-	public void writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
-		tag.setBoolean("active", this.active);
-		tag.setInteger("orientation", this.orientation.ordinal());
-		tag.setFloat("size", this.size);
+	
+	public void writeToItemNBT(NBTTagCompound tag) {
 		tag.setInteger("click_color", this.click_color);
 		tag.setInteger("base_color", this.base_color);
 		tag.setString("base", this.base);
@@ -31,12 +27,15 @@ public class TileEntityButton extends TileEntity {
 		tag.setString("text", this.text);
 	}
 
-	public void readFromNBT(NBTTagCompound tag) {
-		super.readFromNBT(tag);
-		this.active = tag.getBoolean("active");
-		this.orientation = ForgeDirection.getOrientation(tag
-				.getInteger("orientation"));
-		this.size = tag.getFloat("size");
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setBoolean("active", this.active);
+		tag.setInteger("orientation", this.orientation.ordinal());
+		tag.setFloat("size", this.size); //TODO: move to item
+		this.writeToItemNBT(tag);
+	}
+	
+	public void readFromItemNBT(NBTTagCompound tag) {
 		this.click_color = tag.getInteger("click_color");
 		this.base_color = tag.getInteger("base_color");
 		this.base = tag.getString("base");
@@ -44,14 +43,24 @@ public class TileEntityButton extends TileEntity {
 		this.text = tag.getString("text");
 	}
 
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.active = tag.getBoolean("active");
+		this.orientation = ForgeDirection.getOrientation(tag.getInteger("orientation"));
+		this.size = tag.getFloat("size"); //TODO: move to item
+		this.readFromItemNBT(tag);
+	}
+
 	public void fromItem(ItemStack item) {
 		if (item.stackTagCompound == null)
 			return;
-		this.text = item.stackTagCompound.getString("text");
-		this.base = item.stackTagCompound.getString("base");
-		this.click = item.stackTagCompound.getString("click");
-		this.base_color = item.stackTagCompound.getInteger("base_color");
-		this.click_color = item.stackTagCompound.getInteger("click_color");
+		this.readFromItemNBT(item.stackTagCompound);
+	}
+
+	public void toItem(ItemStack item) {
+		if (item.stackTagCompound == null)
+			item.stackTagCompound = new NBTTagCompound();
+		this.writeToItemNBT(item.stackTagCompound);
 	}
 
 	@Override

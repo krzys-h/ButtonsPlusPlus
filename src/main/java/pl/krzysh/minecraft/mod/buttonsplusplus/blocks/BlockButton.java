@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -320,5 +321,16 @@ public class BlockButton extends Block implements ITileEntityProvider {
     @Override
     public void registerBlockIcons(IIconRegister iconreg)
     {
+    }
+    
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player)
+    {
+    	TileEntityButton tile = (TileEntityButton)world.getTileEntity(x, y, z);
+    	if(tile == null) return null;
+    	
+    	ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
+    	tile.toItem(stack);
+    	return stack;
     }
 }

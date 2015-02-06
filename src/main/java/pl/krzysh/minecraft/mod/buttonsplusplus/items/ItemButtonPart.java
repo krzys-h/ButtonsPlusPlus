@@ -47,7 +47,7 @@ public class ItemButtonPart extends Item {
 		stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setString("type", type);
 		stack.stackTagCompound.setString("part", part);
-		stack.stackTagCompound.setInteger("color", part.equals(Names.Items.ButtonPart.Types.BASE) ? MinecraftRainbow.GRAY.color : MinecraftRainbow.RED.color); //TODO
+		stack.stackTagCompound.setInteger("color", type.equals(Names.Items.ButtonPart.Types.BASE) ? MinecraftRainbow.GRAY.color : MinecraftRainbow.RED.color); //TODO
 		return stack;
 	}
 }
