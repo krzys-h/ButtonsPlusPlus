@@ -1,0 +1,9 @@
+# Build output
+build
+bin
+
+# Eclipse workspace (generated with ./gradlew eclipse)
+eclipse
+
+# Gradle cache
+.gradle

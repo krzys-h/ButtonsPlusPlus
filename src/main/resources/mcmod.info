@@ -1,0 +1,16 @@
+[
+{
+  "modid": "buttonsplusplus",
+  "name": "Buttons++",
+  "description": "Buttons!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["krzys_h"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
