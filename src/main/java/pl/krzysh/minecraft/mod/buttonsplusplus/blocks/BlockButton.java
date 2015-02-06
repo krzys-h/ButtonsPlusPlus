@@ -5,6 +5,7 @@ import static net.minecraftforge.common.util.ForgeDirection.NORTH;
 import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -332,5 +333,20 @@ public class BlockButton extends Block implements ITileEntityProvider {
     	ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
     	tile.toItem(stack);
     	return stack;
+    }
+	
+	@Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+    {
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+
+    	TileEntityButton tile = (TileEntityButton)world.getTileEntity(x, y, z);
+    	if(tile == null) return ret;
+        
+        ItemStack stack = new ItemStack(this);
+        tile.toItem(stack);
+        ret.add(stack);
+        
+        return ret;
     }
 }

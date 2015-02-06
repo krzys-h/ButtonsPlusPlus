@@ -1,13 +1,13 @@
 package pl.krzysh.minecraft.mod.buttonsplusplus.multipart;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
@@ -22,6 +22,7 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.IFaceRedstonePart;
+import codechicken.multipart.TileMultipart;
 import codechicken.multipart.minecraft.McBlockPart;
 import codechicken.multipart.minecraft.McSidedMetaPart;
 
@@ -204,8 +205,26 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
     @Override
     public ItemStack pickItem(MovingObjectPosition hit)
     {
-    	ItemStack stack = new ItemStack(Item.getItemFromBlock(ModBlocks.button));
+    	ItemStack stack = new ItemStack(getBlock());
     	tile.toItem(stack);
     	return stack;
+    }
+    
+    @Override
+    public Iterable<ItemStack> getDrops()
+    {
+    	ItemStack stack = new ItemStack(getBlock());
+    	tile.toItem(stack);
+        return Arrays.asList(stack);
+    }
+    
+    // TODO: Why McSidedMetaPart doesn't do it like this?
+    @Override
+    public void drop()
+    {
+    	for(ItemStack stack : getDrops()) {
+    		TileMultipart.dropItem(stack, world(), Vector3.fromTileEntityCenter(tile()));
+    	}
+        tile().remPart(this);
     }
 }

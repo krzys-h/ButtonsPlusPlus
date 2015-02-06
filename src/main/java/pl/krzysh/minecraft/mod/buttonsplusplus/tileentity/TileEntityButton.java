@@ -24,7 +24,8 @@ public class TileEntityButton extends TileEntity {
 		tag.setInteger("base_color", this.base_color);
 		tag.setString("base", this.base);
 		tag.setString("click", this.click);
-		tag.setString("text", this.text);
+		if(!this.text.isEmpty())
+			tag.setString("text", this.text);
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
