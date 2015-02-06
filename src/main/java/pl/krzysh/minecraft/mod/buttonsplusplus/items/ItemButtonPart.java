@@ -2,6 +2,7 @@ package pl.krzysh.minecraft.mod.buttonsplusplus.items;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ public class ItemButtonPart extends Item {
 		setUnlocalizedName(Names.Items.BUTTON_PART);
 	}
 	
+	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
 		for (String type : ButtonPartRegistry.instance.getTypes()) {
 			for (String part : ButtonPartRegistry.instance.getParts(type)) {
@@ -32,5 +34,10 @@ public class ItemButtonPart extends Item {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void registerIcons(IIconRegister iconreg)
+	{
 	}
 }
