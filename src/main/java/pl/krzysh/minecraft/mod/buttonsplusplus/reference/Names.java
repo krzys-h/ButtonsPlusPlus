@@ -16,7 +16,7 @@ public class Names {
 				public static final String ROUND = "round";
 			}
 		}
-		public static final String BUTTON_PART = "button.part";
-		public static final String BUTTON_LABEL = "button.label";
+		public static final String BUTTON_PART = "button_part";
+		public static final String BUTTON_LABEL = "button_label";
 	}
 }
