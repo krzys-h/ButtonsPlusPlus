@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.krzysh.minecraft.mod.buttonsplusplus.ButtonPartRegistry;
 import pl.krzysh.minecraft.mod.buttonsplusplus.creativetab.CreativeTab;
+import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModItems;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import pl.krzysh.minecraft.mod.buttonsplusplus.util.MinecraftRainbow;
 
@@ -25,7 +26,7 @@ public class ItemButtonPart extends Item {
 		for (String type : ButtonPartRegistry.instance.getTypes()) {
 			for (String part : ButtonPartRegistry.instance.getParts(type)) {
 				for (MinecraftRainbow color : MinecraftRainbow.values()) {
-					ItemStack stack = new ItemStack(item, 1, 0);
+					ItemStack stack = new ItemStack(item);
 					stack.stackTagCompound = new NBTTagCompound();
 					stack.stackTagCompound.setString("type", type);
 					stack.stackTagCompound.setString("part", part);
@@ -39,5 +40,14 @@ public class ItemButtonPart extends Item {
 	@Override
 	public void registerIcons(IIconRegister iconreg)
 	{
+	}
+
+	public ItemStack getItemStack(String type, String part) {
+		ItemStack stack = new ItemStack(this);
+		stack.stackTagCompound = new NBTTagCompound();
+		stack.stackTagCompound.setString("type", type);
+		stack.stackTagCompound.setString("part", part);
+		stack.stackTagCompound.setInteger("color", part.equals(Names.Items.ButtonPart.Types.BASE) ? MinecraftRainbow.GRAY.color : MinecraftRainbow.RED.color); //TODO
+		return stack;
 	}
 }

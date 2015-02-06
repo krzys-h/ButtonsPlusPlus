@@ -26,14 +26,14 @@ public class CraftingButtonRecipe implements ICraftingButtonRecipe {
 				if(!matched) {
 					if(!(click.getItem() instanceof ItemButtonPart)) return null;
 					if(click.stackTagCompound == null) return null;
-					if(click.stackTagCompound.getString("type") != Names.Items.ButtonPart.Types.CLICK) return null;
+					if(!click.stackTagCompound.getString("type").equals(Names.Items.ButtonPart.Types.CLICK)) return null;
 					
 					if(y >= 2) continue;
 					ItemStack base = craftingTable.getStackInSlot((y+1)*3+x);
 					if(base == null) return null;
 					if(!(base.getItem() instanceof ItemButtonPart)) return null;
 					if(base.stackTagCompound == null) return null;
-					if(base.stackTagCompound.getString("type") != Names.Items.ButtonPart.Types.BASE) return null;
+					if(!base.stackTagCompound.getString("type").equals(Names.Items.ButtonPart.Types.BASE)) return null;
 					
 					components.click = click;
 					components.base = base;

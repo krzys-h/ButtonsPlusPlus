@@ -2,6 +2,7 @@ package pl.krzysh.minecraft.mod.buttonsplusplus;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.RecipeSorter;
+import pl.krzysh.minecraft.mod.buttonsplusplus.crafting.Crafting;
 import pl.krzysh.minecraft.mod.buttonsplusplus.crafting.CraftingButton;
 import pl.krzysh.minecraft.mod.buttonsplusplus.handlers.ButtonPlaceHandler;
 import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModBlocks;
@@ -29,19 +30,20 @@ public class ButtonsPlusPlus {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new ButtonPlaceHandler());
 		ModBlocks.init();
 		ModItems.init();
 
 		if (Loader.isModLoaded("ForgeMultipart"))
+		{
+			MinecraftForge.EVENT_BUS.register(new ButtonPlaceHandler());
 			new RegisterButtonPart().init();
+		}
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderers();
-		GameRegistry.addRecipe(new CraftingButton()); // TODO: put this somewhere
-		RecipeSorter.register(Version.MODID.toLowerCase() + ":gun", CraftingButton.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+		Crafting.init();
 	}
 
 	@EventHandler
