@@ -55,14 +55,14 @@ public class ButtonRenderer extends TileEntitySpecialRenderer implements IItemRe
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 
-        FontRenderer fontrenderer = this.func_147498_b();
-        GL11.glScalef(0.01F, -0.01F, 0.01F);
-        GL11.glTranslatef(48.5F, -30.01F, 52.5F); //TODO: is it good?
-        GL11.glRotatef(90F, -1F, 0F, 0F);
-        GL11.glRotatef(180F, 0F, 1F, 0F);
-	    GL11.glDepthMask(false);
-	    fontrenderer.drawString(tile.text, -fontrenderer.getStringWidth(tile.text) / 2, 0, 0);
-	    GL11.glDepthMask(true);
+		FontRenderer fontrenderer = this.func_147498_b();
+		GL11.glScalef(0.01F, -0.01F, 0.01F);
+		GL11.glTranslatef(48.5F, -30.01F, 52.5F); //TODO: is it good?
+		GL11.glRotatef(90F, -1F, 0F, 0F);
+		GL11.glRotatef(180F, 0F, 1F, 0F);
+		GL11.glDepthMask(false);
+		fontrenderer.drawString(tile.text, -fontrenderer.getStringWidth(tile.text) / 2, 0, 0);
+		GL11.glDepthMask(true);
 	}
 	
 	// "Stolen" from https://github.com/pahimar/Equivalent-Exchange-3/blob/4230e778060bbe451ec2e4e7cf9de50253bd495b/src/main/java/com/pahimar/ee3/client/renderer/tileentity/TileEntityRendererAludel.java#L89-L115 ;)

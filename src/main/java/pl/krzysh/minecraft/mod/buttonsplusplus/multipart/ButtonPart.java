@@ -30,27 +30,27 @@ import codechicken.multipart.minecraft.McSidedMetaPart;
 public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
 {
 	private TileEntityButton tile;
-    
-    public ButtonPart()
-    {
-    	super();
-    	tile = new TileEntityButton();
-    }
-    
-    //TODO: is it needed?
-    private ButtonPart(int meta)
-    {
-        super(meta);
-    	tile = new TileEntityButton();
-    }
-    
-    public ButtonPart(TileEntityButton tile) {
-    	super(0);
-    	this.tile = tile;
-    	if(this.tile == null) this.tile = new TileEntityButton();
-    }
-    
-    public ButtonPart(ForgeDirection orientation, ItemStack item) {
+	
+	public ButtonPart()
+	{
+		super();
+		tile = new TileEntityButton();
+	}
+	
+	//TODO: is it needed?
+	private ButtonPart(int meta)
+	{
+		super(meta);
+		tile = new TileEntityButton();
+	}
+	
+	public ButtonPart(TileEntityButton tile) {
+		super(0);
+		this.tile = tile;
+		if(this.tile == null) this.tile = new TileEntityButton();
+	}
+	
+	public ButtonPart(ForgeDirection orientation, ItemStack item) {
 		super(0);
 		tile = new TileEntityButton();
 		tile.orientation = orientation;
@@ -58,173 +58,173 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
 	}
 
 	@Override
-    public int sideForMeta(int meta)
-    {
-        return tile.orientation.ordinal();
-    }
+	public int sideForMeta(int meta)
+	{
+		return tile.orientation.ordinal();
+	}
 
-    @Override
-    public Block getBlock()
-    {
-        return ModBlocks.button;
-    }
-    
-    @Override
-    public String getType()
-    {
-        return Names.Blocks.BUTTON;
-    }
-    
-    @Override
-    public Cuboid6 getBounds()
-    {
-        return ModBlocks.button.getBlockBounds(tile, true);
-    }
-    
-    @Override
-    public Iterable<Cuboid6> getOcclusionBoxes()
-    {
-    	List<Cuboid6> l = new ArrayList<Cuboid6>();
-    	l.add(ModBlocks.button.getBlockBounds(tile, false));
-    	return l;
-    }
+	@Override
+	public Block getBlock()
+	{
+		return ModBlocks.button;
+	}
+	
+	@Override
+	public String getType()
+	{
+		return Names.Blocks.BUTTON;
+	}
+	
+	@Override
+	public Cuboid6 getBounds()
+	{
+		return ModBlocks.button.getBlockBounds(tile, true);
+	}
+	
+	@Override
+	public Iterable<Cuboid6> getOcclusionBoxes()
+	{
+		List<Cuboid6> l = new ArrayList<Cuboid6>();
+		l.add(ModBlocks.button.getBlockBounds(tile, false));
+		return l;
+	}
 
-    public static McBlockPart placement(World world, BlockCoord pos, int side, ItemStack held)
-    {
-        if(side == 0 || side == 1)
-            return null;
-        
-        if(held.stackTagCompound == null)
-        	return null;
-        
-        pos = pos.copy().offset(side^1);
-        if(!world.isSideSolid(pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side)))
-            return null;
-        
-        return new ButtonPart(ForgeDirection.getOrientation(side).getOpposite(), held);
-    }
+	public static McBlockPart placement(World world, BlockCoord pos, int side, ItemStack held)
+	{
+		if(side == 0 || side == 1)
+			return null;
+		
+		if(held.stackTagCompound == null)
+			return null;
+		
+		pos = pos.copy().offset(side^1);
+		if(!world.isSideSolid(pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side)))
+			return null;
+		
+		return new ButtonPart(ForgeDirection.getOrientation(side).getOpposite(), held);
+	}
 
-    @Override
-    public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
-    {
-        if(!world().isRemote)
-            toggle();
-        
-        return true;
-    }
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
+	{
+		if(!world().isRemote)
+			toggle();
+		
+		return true;
+	}
 
-    private void toggle()
-    {
-        tile.active = !tile.active;
-        world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, tile.active ? 0.6F : 0.5F);
-        
-        sendDescUpdate();
-        tile().notifyPartChange(this);
-        tile().notifyNeighborChange(tile.orientation.ordinal());
-        tile().markDirty();
-    }
-    
-    @Override
-    public void onRemoved()
-    {
-        if(tile.active)
-            tile().notifyNeighborChange(tile.orientation.ordinal());
-    }
-    
-    @Override
-    public int weakPowerLevel(int side)
-    {
-        return tile.active ? 15 : 0;
-    }
+	private void toggle()
+	{
+		tile.active = !tile.active;
+		world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, tile.active ? 0.6F : 0.5F);
+		
+		sendDescUpdate();
+		tile().notifyPartChange(this);
+		tile().notifyNeighborChange(tile.orientation.ordinal());
+		tile().markDirty();
+	}
+	
+	@Override
+	public void onRemoved()
+	{
+		if(tile.active)
+			tile().notifyNeighborChange(tile.orientation.ordinal());
+	}
+	
+	@Override
+	public int weakPowerLevel(int side)
+	{
+		return tile.active ? 15 : 0;
+	}
 
-    @Override
-    public int strongPowerLevel(int side)
-    {
-        return tile.active && ForgeDirection.getOrientation(side) == tile.orientation ? 15 : 0;
-    }
+	@Override
+	public int strongPowerLevel(int side)
+	{
+		return tile.active && ForgeDirection.getOrientation(side) == tile.orientation ? 15 : 0;
+	}
 
-    @Override
-    public boolean canConnectRedstone(int side)
-    {
-        return true;
-    }
-    
-    @Override
-    public int getFace() {
-        return tile.orientation.ordinal();
-    }
-    
-    @Override
-    public void invalidateConvertedTile()
-    {
-    	tile = (TileEntityButton)this.world().getTileEntity(x(), y(), z());
-    }
-    
-    @Override
-    public void save(NBTTagCompound tag)
-    {
-    	tile.writeToNBT(tag);
-    }
-    
-    @Override
-    public void load(NBTTagCompound tag)
-    {
-    	tile.readFromNBT(tag);
-    }
-    
-    @Override
-    public void writeDesc(MCDataOutput packet)
-    {
-    	NBTTagCompound tag = new NBTTagCompound();
-    	this.save(tag);
-    	packet.writeNBTTagCompound(tag);
-    }
+	@Override
+	public boolean canConnectRedstone(int side)
+	{
+		return true;
+	}
+	
+	@Override
+	public int getFace() {
+		return tile.orientation.ordinal();
+	}
+	
+	@Override
+	public void invalidateConvertedTile()
+	{
+		tile = (TileEntityButton)this.world().getTileEntity(x(), y(), z());
+	}
+	
+	@Override
+	public void save(NBTTagCompound tag)
+	{
+		tile.writeToNBT(tag);
+	}
+	
+	@Override
+	public void load(NBTTagCompound tag)
+	{
+		tile.readFromNBT(tag);
+	}
+	
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		this.save(tag);
+		packet.writeNBTTagCompound(tag);
+	}
 
-    @Override
-    public void readDesc(MCDataInput packet)
-    {
-    	NBTTagCompound tag = new NBTTagCompound();
-    	tag = packet.readNBTTagCompound();
-    	this.load(tag);
-    }
-    
-    @Override
-    public void renderDynamic(Vector3 pos, float frame, int pass)
-    {
-    	TileEntitySpecialRenderer rend = TileEntityRendererDispatcher.instance.getSpecialRenderer(tile);
-    	rend.func_147497_a(TileEntityRendererDispatcher.instance);
-    	rend.renderTileEntityAt(tile, pos.x, pos.y, pos.z, 0);
-    }
-    
-    @Override
-    public int getLightValue()
-    {
-    	return tile.active ? 7 : 0; //TODO: for whatever reason this is buggy
-    }
-    
-    @Override
-    public ItemStack pickItem(MovingObjectPosition hit)
-    {
-    	ItemStack stack = new ItemStack(getBlock());
-    	tile.toItem(stack);
-    	return stack;
-    }
-    
-    @Override
-    public Iterable<ItemStack> getDrops()
-    {
-    	ItemStack stack = new ItemStack(getBlock());
-    	tile.toItem(stack);
-        return Arrays.asList(stack);
-    }
-    
-    // TODO: Why McSidedMetaPart doesn't do it like this?
-    @Override
-    public void drop()
-    {
-    	for(ItemStack stack : getDrops()) {
-    		TileMultipart.dropItem(stack, world(), Vector3.fromTileEntityCenter(tile()));
-    	}
-        tile().remPart(this);
-    }
+	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag = packet.readNBTTagCompound();
+		this.load(tag);
+	}
+	
+	@Override
+	public void renderDynamic(Vector3 pos, float frame, int pass)
+	{
+		TileEntitySpecialRenderer rend = TileEntityRendererDispatcher.instance.getSpecialRenderer(tile);
+		rend.func_147497_a(TileEntityRendererDispatcher.instance);
+		rend.renderTileEntityAt(tile, pos.x, pos.y, pos.z, 0);
+	}
+	
+	@Override
+	public int getLightValue()
+	{
+		return tile.active ? 7 : 0; //TODO: for whatever reason this is buggy
+	}
+	
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit)
+	{
+		ItemStack stack = new ItemStack(getBlock());
+		tile.toItem(stack);
+		return stack;
+	}
+	
+	@Override
+	public Iterable<ItemStack> getDrops()
+	{
+		ItemStack stack = new ItemStack(getBlock());
+		tile.toItem(stack);
+		return Arrays.asList(stack);
+	}
+	
+	// TODO: Why McSidedMetaPart doesn't do it like this?
+	@Override
+	public void drop()
+	{
+		for(ItemStack stack : getDrops()) {
+			TileMultipart.dropItem(stack, world(), Vector3.fromTileEntityCenter(tile()));
+		}
+		tile().remPart(this);
+	}
 }

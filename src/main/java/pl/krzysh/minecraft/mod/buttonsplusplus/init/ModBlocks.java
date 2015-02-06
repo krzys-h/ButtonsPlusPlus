@@ -12,9 +12,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class ModBlocks {
 	public static final BlockButton button = new BlockButton();
 	
-    public static void init()
-    {
-    	GameRegistry.registerBlock(button, ItemBlockButton.class, Names.Blocks.BUTTON);
-    	GameRegistry.registerTileEntity(TileEntityButton.class, Names.Blocks.BUTTON);
-    }
+	public static void init()
+	{
+		GameRegistry.registerBlock(button, ItemBlockButton.class, Names.Blocks.BUTTON);
+		GameRegistry.registerTileEntity(TileEntityButton.class, Names.Blocks.BUTTON);
+	}
 }

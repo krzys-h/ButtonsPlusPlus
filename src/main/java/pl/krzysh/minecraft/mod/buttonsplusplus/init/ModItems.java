@@ -13,10 +13,10 @@ public class ModItems {
 	public static final ItemButtonLabel button_label = new ItemButtonLabel();
 	public static final ItemButtonBuildingMaterial button_building_material = new ItemButtonBuildingMaterial();
 	
-    public static void init()
-    {
-    	GameRegistry.registerItem(button_part, Names.Items.BUTTON_PART);
-    	GameRegistry.registerItem(button_label, Names.Items.BUTTON_LABEL);
-    	GameRegistry.registerItem(button_building_material, Names.Items.BUTTON_BUILDING_MATERIAL);
-    }
+	public static void init()
+	{
+		GameRegistry.registerItem(button_part, Names.Items.BUTTON_PART);
+		GameRegistry.registerItem(button_label, Names.Items.BUTTON_LABEL);
+		GameRegistry.registerItem(button_building_material, Names.Items.BUTTON_BUILDING_MATERIAL);
+	}
 }

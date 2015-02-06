@@ -51,17 +51,17 @@ public class ButtonLabelRenderer implements IItemRenderer {
 
 		if(item.hasDisplayName()) {
 			FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
-	        GL11.glScalef(0.03F, -0.03F, 0.03F); //TODO: scale to fit
-	        if(textRotate)
-	        	GL11.glRotatef(180F, 1F, 0F, 0F);
-	        else
-	        	GL11.glRotatef(180F, 0F, 1F, 0F);
-	        float x = textRotate ? 1F : -1F;
-	        float x2 = textRotate ? 0 : 5F;
-	        GL11.glTranslatef(17.5F*x, 14F*x-x2, -0.1F*x);
-		    GL11.glDepthMask(false);
-		    fontrenderer.drawString(item.getDisplayName(), -fontrenderer.getStringWidth(item.getDisplayName()) / 2, 0, 0);
-		    GL11.glDepthMask(true);
+			GL11.glScalef(0.03F, -0.03F, 0.03F); //TODO: scale to fit
+			if(textRotate)
+				GL11.glRotatef(180F, 1F, 0F, 0F);
+			else
+				GL11.glRotatef(180F, 0F, 1F, 0F);
+			float x = textRotate ? 1F : -1F;
+			float x2 = textRotate ? 0 : 5F;
+			GL11.glTranslatef(17.5F*x, 14F*x-x2, -0.1F*x);
+			GL11.glDepthMask(false);
+			fontrenderer.drawString(item.getDisplayName(), -fontrenderer.getStringWidth(item.getDisplayName()) / 2, 0, 0);
+			GL11.glDepthMask(true);
 		}
 		
 		GL11.glPopMatrix();
