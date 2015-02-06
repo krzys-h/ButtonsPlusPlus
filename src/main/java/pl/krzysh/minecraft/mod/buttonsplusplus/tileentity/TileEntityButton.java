@@ -1,5 +1,6 @@
 package pl.krzysh.minecraft.mod.buttonsplusplus.tileentity;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -33,13 +34,24 @@ public class TileEntityButton extends TileEntity {
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.active = tag.getBoolean("active");
-		this.orientation = ForgeDirection.getOrientation(tag.getInteger("orientation"));
+		this.orientation = ForgeDirection.getOrientation(tag
+				.getInteger("orientation"));
 		this.size = tag.getFloat("size");
 		this.click_color = tag.getInteger("click_color");
 		this.base_color = tag.getInteger("base_color");
 		this.base = tag.getString("base");
 		this.click = tag.getString("click");
 		this.text = tag.getString("text");
+	}
+
+	public void fromItem(ItemStack item) {
+		if (item.stackTagCompound == null)
+			return;
+		this.text = item.stackTagCompound.getString("text");
+		this.base = item.stackTagCompound.getString("base");
+		this.click = item.stackTagCompound.getString("click");
+		this.base_color = item.stackTagCompound.getInteger("base_color");
+		this.click_color = item.stackTagCompound.getInteger("click_color");
 	}
 
 	@Override

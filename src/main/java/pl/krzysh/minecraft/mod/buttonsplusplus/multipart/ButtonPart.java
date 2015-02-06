@@ -41,15 +41,17 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
     	tile = new TileEntityButton();
     }
     
-    public ButtonPart(ForgeDirection orientation, NBTTagCompound tag) {
+    public ButtonPart(TileEntityButton tile) {
+    	super(0);
+    	this.tile = tile;
+    	if(this.tile == null) this.tile = new TileEntityButton();
+    }
+    
+    public ButtonPart(ForgeDirection orientation, ItemStack item) {
 		super(0);
 		tile = new TileEntityButton();
 		tile.orientation = orientation;
-		tile.text = tag.getString("text");
-		tile.base = tag.getString("base");
-		tile.click = tag.getString("click");
-		tile.base_color = tag.getInteger("base_color");
-		tile.click_color = tag.getInteger("click_color");
+		tile.fromItem(item);
 	}
 
 	@Override
@@ -96,8 +98,7 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
         if(!world.isSideSolid(pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side)))
             return null;
         
-        //TODO: why opposite?
-        return new ButtonPart(ForgeDirection.getOrientation(side).getOpposite(), held.stackTagCompound);
+        return new ButtonPart(ForgeDirection.getOrientation(side).getOpposite(), held);
     }
 
     @Override

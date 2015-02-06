@@ -11,10 +11,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.krzysh.minecraft.mod.buttonsplusplus.tileentity.TileEntityButton;
+import codechicken.lib.vec.BlockCoord;
 
 public class ItemBlockButton extends ItemBlock {
 	public ItemBlockButton(Block block) {
@@ -31,30 +31,8 @@ public class ItemBlockButton extends ItemBlock {
     	TileEntityButton tileentity = (TileEntityButton) world.getTileEntity(x, y, z);
     	if(tileentity == null) return ret;
 
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
-
-        if (dir == NORTH && world.isSideSolid(x, y, z + 1, NORTH))
-        {
-            tileentity.orientation = SOUTH;
-        }
-        else if (dir == SOUTH && world.isSideSolid(x, y, z - 1, SOUTH))
-        {
-            tileentity.orientation = NORTH;
-        }
-        else if (dir == WEST && world.isSideSolid(x + 1, y, z, WEST))
-        {
-            tileentity.orientation = EAST;
-        }
-        else if (dir == EAST && world.isSideSolid(x - 1, y, z, EAST))
-        {
-            tileentity.orientation = WEST;
-        }
-        
-        tileentity.text = stack.stackTagCompound.getString("text");
-        tileentity.base = stack.stackTagCompound.getString("base");
-        tileentity.click = stack.stackTagCompound.getString("click");
-        tileentity.base_color = stack.stackTagCompound.getInteger("base_color");
-        tileentity.click_color = stack.stackTagCompound.getInteger("click_color");
+        tileentity.orientation = ForgeDirection.getOrientation(side).getOpposite();
+        tileentity.fromItem(stack);
         
 		return ret;
 	}
