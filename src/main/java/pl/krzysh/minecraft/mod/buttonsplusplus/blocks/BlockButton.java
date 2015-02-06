@@ -282,7 +282,7 @@ public class BlockButton extends Block implements ITileEntityProvider {
 	@Override
     public void getSubBlocks(Item item, CreativeTabs creativeTab, List list)
     {
-		//TODO: Do we really want 16*16*2 items in the creative tab
+		//TODO: Do we really want 16*16*2 items in the creative tab?
 		ItemStack stack;
 		
 		stack = new ItemStack(item, 1);
