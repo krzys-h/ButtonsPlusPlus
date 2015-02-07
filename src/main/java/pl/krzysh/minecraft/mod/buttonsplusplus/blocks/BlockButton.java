@@ -284,23 +284,23 @@ public class BlockButton extends Block implements ITileEntityProvider {
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs creativeTab, List list)
 	{
-		//TODO: Do we really want 16*16*2 items in the creative tab?
+		//TODO: Do we really want 16*16*2*17 items in the creative tab?
 		ItemStack stack;
+		TileEntityButton tile = new TileEntityButton();
 		
+		tile.base = "cube";
+		tile.click = "cube";
+		tile.base_color = MinecraftRainbow.GRAY.color;
+		tile.click_color = MinecraftRainbow.RED.color;
+
 		stack = new ItemStack(item, 1);
-		stack.stackTagCompound = new NBTTagCompound();
-		stack.stackTagCompound.setString("base", "cube");
-		stack.stackTagCompound.setString("click", "cube");
-		stack.stackTagCompound.setInteger("base_color", MinecraftRainbow.GRAY.color);
-		stack.stackTagCompound.setInteger("click_color", MinecraftRainbow.RED.color);
+		tile.click = "cube";
+		tile.toItem(stack);
 		list.add(stack);
-		
+
 		stack = new ItemStack(item, 1);
-		stack.stackTagCompound = new NBTTagCompound();
-		stack.stackTagCompound.setString("base", "cube");
-		stack.stackTagCompound.setString("click", "round");
-		stack.stackTagCompound.setInteger("base_color", MinecraftRainbow.GRAY.color);
-		stack.stackTagCompound.setInteger("click_color", MinecraftRainbow.RED.color);
+		tile.click = "round";
+		tile.toItem(stack);
 		list.add(stack);
 	}
 	
@@ -316,7 +316,7 @@ public class BlockButton extends Block implements ITileEntityProvider {
 		if(world instanceof PartMetaAccess) return 0; //meh
 		TileEntityButton tile = (TileEntityButton)world.getTileEntity(x, y, z);
 		
-		return tile.active ? 7 : 0;
+		return tile.lamp && tile.active ? 7 : 0;
 	}
 	
 	@Override

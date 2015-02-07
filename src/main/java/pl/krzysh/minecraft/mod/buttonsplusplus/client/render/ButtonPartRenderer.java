@@ -6,8 +6,7 @@ import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonPart;
-import pl.krzysh.minecraft.mod.buttonsplusplus.util.ColorUtils;
+import pl.krzysh.minecraft.mod.buttonsplusplus.util.Color;
 
 public class ButtonPartRenderer implements IItemRenderer {
 	@Override
@@ -48,8 +47,8 @@ public class ButtonPartRenderer implements IItemRenderer {
 		if(model != null) {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			if(itemstack.stackTagCompound != null) {
-				int color = itemstack.stackTagCompound.getInteger("color");
-				GL11.glColor3f(ColorUtils.getR(color), ColorUtils.getG(color), ColorUtils.getB(color));
+				Color c = new Color(itemstack.stackTagCompound.getInteger("color"));
+				GL11.glColor3f(c.getRf(), c.getGf(), c.getBf());
 			}
 			model.renderAll();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);

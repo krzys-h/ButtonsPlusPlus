@@ -17,15 +17,18 @@ public class TileEntityButton extends TileEntity {
 	public int base_color = MinecraftRainbow.GRAY.color;
 	public String base = "cube";
 	public String click = "round";
-	public String text = "OK";
+	public String text = "";
+	public boolean lamp = false;
+	public int lamp_color = MinecraftRainbow.RED.color;
 	
 	public void writeToItemNBT(NBTTagCompound tag) {
 		tag.setInteger("click_color", this.click_color);
 		tag.setInteger("base_color", this.base_color);
 		tag.setString("base", this.base);
 		tag.setString("click", this.click);
-		if(!this.text.isEmpty())
-			tag.setString("text", this.text);
+		tag.setString("text", this.text);
+		tag.setBoolean("lamp", this.lamp);
+		tag.setInteger("lamp_color", this.lamp_color);
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -42,6 +45,8 @@ public class TileEntityButton extends TileEntity {
 		this.base = tag.getString("base");
 		this.click = tag.getString("click");
 		this.text = tag.getString("text");
+		this.lamp = tag.getBoolean("lamp");
+		this.lamp_color = tag.getInteger("lamp_color");
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {

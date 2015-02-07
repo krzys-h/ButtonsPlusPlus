@@ -1,11 +1,11 @@
 package pl.krzysh.minecraft.mod.buttonsplusplus.crafting;
 
-import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonLabel;
-import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonPart;
-import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonLabel;
+import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonPart;
+import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonUpgrade;
+import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 
 public class CraftingButtonRecipe implements ICraftingButtonRecipe {
 	@Override
@@ -20,6 +20,12 @@ public class CraftingButtonRecipe implements ICraftingButtonRecipe {
 					if(components.label != null) return null;
 					if(!click.hasDisplayName()) return null;
 					components.label = click;
+					continue;
+				}
+				if(click.getItem() instanceof ItemButtonUpgrade) {
+					String upgradeType = ((ItemButtonUpgrade)click.getItem()).getUpgradeCategory();
+					if(components.upgrades.containsKey(upgradeType)) return null;
+					components.upgrades.put(upgradeType, click);
 					continue;
 				}
 				
@@ -41,7 +47,6 @@ public class CraftingButtonRecipe implements ICraftingButtonRecipe {
 				} else {
 					if(click == components.click) continue;
 					if(click == components.base) continue;
-					if(click == components.label) continue;
 					return null;
 				}
 			}

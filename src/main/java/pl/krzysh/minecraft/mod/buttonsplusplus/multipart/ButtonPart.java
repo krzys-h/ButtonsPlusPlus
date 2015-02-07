@@ -199,7 +199,7 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
 	@Override
 	public int getLightValue()
 	{
-		return tile.active ? 7 : 0; //TODO: for whatever reason this is buggy
+		return tile.lamp && tile.active ? 7 : 0; //TODO: for whatever reason this is buggy
 	}
 	
 	@Override

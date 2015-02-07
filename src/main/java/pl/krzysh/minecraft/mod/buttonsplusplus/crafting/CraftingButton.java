@@ -7,8 +7,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModBlocks;
-import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonLabel;
-import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonPart;
+import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonUpgrade;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 
 public class CraftingButton implements IRecipe {
@@ -33,6 +32,14 @@ public class CraftingButton implements IRecipe {
 		itemstack.stackTagCompound.setInteger("click_color", components.click.stackTagCompound.getInteger("color"));
 		if(components.label != null && components.label.hasDisplayName())
 			itemstack.stackTagCompound.setString("text", components.label.getDisplayName());
+		else
+			itemstack.stackTagCompound.setString("text", "");
+		if(components.upgrades.containsKey(Names.Items.BUTTON_LAMP)) {
+			itemstack.stackTagCompound.setBoolean("lamp", true);
+			itemstack.stackTagCompound.setInteger("lamp_color", components.upgrades.get(Names.Items.BUTTON_LAMP).stackTagCompound.getInteger("color"));
+		} else {
+			itemstack.stackTagCompound.setBoolean("lamp", false);
+		}
 		return itemstack;
 	}
 
