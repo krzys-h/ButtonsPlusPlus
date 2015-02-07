@@ -55,8 +55,9 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 
 		FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
 		if(fontrenderer != null) {
+			//TODO: why is text not rendered in inventory?
 			GL11.glScalef(0.01F, -0.01F, 0.01F);
-			GL11.glTranslatef(48.5F, -30.01F, 52.5F); //TODO: is it good?
+			GL11.glTranslatef(50F, -30.01F, 55F);
 			GL11.glRotatef(90F, -1F, 0F, 0F);
 			GL11.glRotatef(180F, 0F, 1F, 0F);
 			GL11.glDepthMask(false);
@@ -86,6 +87,7 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 		}
 	}
 
+	@Override
 	public boolean handleRenderType(ItemStack itemStack, ItemRenderType type) {
 		return true;
 	}
@@ -106,20 +108,23 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 				GL11.glRotatef(-45F, -1F, -1F, 1F);
 				break;
 			case EQUIPPED:
+				GL11.glScalef(1.25F, 1.25F, 1.25F);
+				GL11.glRotatef(-90F, 1F, 0F, 0F);
+				GL11.glRotatef(-45F, 0F, 1F, 0F);
+				GL11.glTranslatef(0.05F, 0F, -0.5F);
+				break;
 			case EQUIPPED_FIRST_PERSON:
-				GL11.glTranslatef(0.1F, 0F, -0.4F);
+				GL11.glTranslatef(0F, 0F, 0F);
+				GL11.glScalef(4F, 4F, 4F);
+				GL11.glTranslatef(0F, -0.5F, 0.5F);
+				GL11.glRotatef(-90F, 1F, 0F, 0F);
 				break;
 			default:
 				break;
 		}
 
 		PartButton part = new PartButton();
-		if(itemStack.stackTagCompound != null) {
-			part.base = itemStack.stackTagCompound.getString("base");
-			part.click = itemStack.stackTagCompound.getString("click");
-			part.base_color = itemStack.stackTagCompound.getInteger("base_color");
-			part.click_color = itemStack.stackTagCompound.getInteger("click_color");
-		}
+		part.fromItem(itemStack);
 		renderButton(part);
 
 		GL11.glPopMatrix();

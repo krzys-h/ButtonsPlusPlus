@@ -20,7 +20,7 @@ public class ModItems {
 	public static final ItemButtonUpgradeAutoRelease button_auto_release = new ItemButtonUpgradeAutoRelease();
 
 	public static void init() {
-		GameRegistry.registerItem(button, Names.Blocks.BUTTON);
+		GameRegistry.registerItem(button, Names.MultiParts.BUTTON);
 		GameRegistry.registerItem(button_building_material, Names.Items.BUTTON_BUILDING_MATERIAL);
 		GameRegistry.registerItem(button_part, Names.Items.BUTTON_PART);
 		GameRegistry.registerItem(button_label, Names.Items.BUTTON_LABEL);

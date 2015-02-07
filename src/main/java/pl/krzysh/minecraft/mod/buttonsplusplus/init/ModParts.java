@@ -12,12 +12,12 @@ public class ModParts implements IPartFactory {
 	public static void init() {
 		if(instance != null) throw new RuntimeException("ModParts.init called twice!");
 		instance = new ModParts();
-		MultiPartRegistry.registerParts(instance, new String[] { Names.Blocks.BUTTON });
+		MultiPartRegistry.registerParts(instance, new String[] { Names.MultiParts.BUTTON });
 	}
 
 	@Override
 	public TMultiPart createPart(String name, boolean client) {
-		if(name.equals(Names.Blocks.BUTTON))
+		if(name.equals(Names.MultiParts.BUTTON))
 			return new PartButton();
 
 		return null;

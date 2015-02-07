@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import pl.krzysh.minecraft.mod.buttonsplusplus.creativetab.CreativeTab;
 import pl.krzysh.minecraft.mod.buttonsplusplus.multipart.PartButton;
+import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import pl.krzysh.minecraft.mod.buttonsplusplus.util.MinecraftRainbow;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
@@ -19,7 +20,7 @@ import codechicken.multipart.TMultiPart;
 public class ItemPartButton extends JItemMultiPart {
 	public ItemPartButton() {
 		super();
-		//setHasSubtypes(true);
+		setUnlocalizedName(Names.MultiParts.BUTTON);
 		setCreativeTab(CreativeTab.buttons);
 	}
 

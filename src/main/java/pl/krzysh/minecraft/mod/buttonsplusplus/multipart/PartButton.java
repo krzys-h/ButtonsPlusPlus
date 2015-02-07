@@ -8,11 +8,13 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.krzysh.minecraft.mod.buttonsplusplus.client.render.ButtonRenderer;
 import pl.krzysh.minecraft.mod.buttonsplusplus.client.render.IPartRenderer;
+import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModItems;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import pl.krzysh.minecraft.mod.buttonsplusplus.util.MinecraftRainbow;
 import codechicken.lib.data.MCDataInput;
@@ -115,7 +117,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 
 	@Override
 	public String getType() {
-		return Names.Blocks.BUTTON;
+		return Names.MultiParts.BUTTON;
 	}
 
 	public Cuboid6 getBlockBounds(boolean dynamic) {
@@ -186,7 +188,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 			tile().notifyNeighborChange(this.orientation.ordinal());
 			tile().markDirty();
 			if(this.active && this.autorelease) {
-				scheduleTick(20);
+				scheduleTick(20); //TODO: make time customizable via upgrades
 			}
 		}
 	}
@@ -253,19 +255,19 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 
 	@Override
 	public int getLightValue() {
-		return this.lamp && this.active ? 7 : 0; //TODO: for whatever reason this is buggy
+		return this.lamp && this.active ? 7 : 0;
 	}
 
 	@Override
 	public ItemStack pickItem(MovingObjectPosition hit) {
-		ItemStack stack = new ItemStack(getBlock());
+		ItemStack stack = new ItemStack(ModItems.button);
 		this.toItem(stack);
 		return stack;
 	}
 
 	@Override
 	public Iterable<ItemStack> getDrops() {
-		ItemStack stack = new ItemStack(getBlock());
+		ItemStack stack = new ItemStack(ModItems.button);
 		this.toItem(stack);
 		return Arrays.asList(stack);
 	}
@@ -290,5 +292,17 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 			tile().notifyNeighborChange(this.orientation.ordinal());
 			tile().markDirty();
 		}
+	}
+	
+	@Override
+	public IIcon getBreakingIcon(Object subPart, int side)
+	{
+		return null; //TODO
+	}
+	
+	@Override
+	public IIcon getBrokenIcon(int side)
+	{
+		return null; //TODO
 	}
 }
