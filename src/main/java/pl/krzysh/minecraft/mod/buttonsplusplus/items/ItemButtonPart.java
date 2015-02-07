@@ -13,10 +13,10 @@ import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModItems;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import pl.krzysh.minecraft.mod.buttonsplusplus.util.MinecraftRainbow;
 
-public class ItemButtonPart extends Item {
+public class ItemButtonPart extends BaseItem {
 	public ItemButtonPart()
 	{
-		super();
+		super(true);
 		setCreativeTab(CreativeTab.buttons);
 		setUnlocalizedName(Names.Items.BUTTON_PART);
 	}
@@ -25,14 +25,10 @@ public class ItemButtonPart extends Item {
 	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
 		for (String type : ButtonPartRegistry.instance.getTypes()) {
 			for (String part : ButtonPartRegistry.instance.getParts(type)) {
-				for (MinecraftRainbow color : MinecraftRainbow.values()) {
-					ItemStack stack = new ItemStack(item);
-					stack.stackTagCompound = new NBTTagCompound();
-					stack.stackTagCompound.setString("type", type);
-					stack.stackTagCompound.setString("part", part);
-					stack.stackTagCompound.setInteger("color", color.color);
-					list.add(stack);
-				}
+				NBTTagCompound nbt = new NBTTagCompound();
+				nbt.setString("type", type);
+				nbt.setString("part", part);
+				this.getColorSubItems(item, list, nbt);
 			}
 		}
 	}

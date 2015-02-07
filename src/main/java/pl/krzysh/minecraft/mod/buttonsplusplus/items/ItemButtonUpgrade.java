@@ -12,26 +12,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class ItemButtonUpgrade extends Item {
-	protected boolean colorable;
-	
+public abstract class ItemButtonUpgrade extends BaseItem {
 	public ItemButtonUpgrade(boolean colorable) {
-		super();
-		this.colorable = colorable;
-	}
-	
-	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
-		if(this.colorable) {
-			for (MinecraftRainbow color : MinecraftRainbow.values()) {
-				ItemStack stack = new ItemStack(item);
-				stack.stackTagCompound = new NBTTagCompound();
-				stack.stackTagCompound.setInteger("color", color.color);
-				list.add(stack);
-			}
-		} else {
-			list.add(new ItemStack(item));
-		}
+		super(colorable);
 	}
 	
 	public abstract String getUpgradeCategory();
