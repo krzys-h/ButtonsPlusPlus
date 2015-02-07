@@ -1,13 +1,11 @@
 package pl.krzysh.minecraft.mod.buttonsplusplus.crafting;
 
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModBlocks;
-import pl.krzysh.minecraft.mod.buttonsplusplus.items.ItemButtonUpgrade;
+import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModItems;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 
 public class CraftingButton implements IRecipe {
@@ -25,7 +23,7 @@ public class CraftingButton implements IRecipe {
 		if(components == null)
 			return null;
 
-		ItemStack itemstack = new ItemStack(Item.getItemFromBlock(ModBlocks.button), 1);
+		ItemStack itemstack = new ItemStack(ModItems.button, 1);
 		itemstack.stackTagCompound = new NBTTagCompound();
 		itemstack.stackTagCompound.setString("base", components.base.stackTagCompound.getString("part"));
 		itemstack.stackTagCompound.setString("click", components.click.stackTagCompound.getString("part"));
