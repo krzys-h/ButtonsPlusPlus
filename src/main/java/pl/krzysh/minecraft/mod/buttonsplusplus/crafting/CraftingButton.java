@@ -40,6 +40,7 @@ public class CraftingButton implements IRecipe {
 		} else {
 			itemstack.stackTagCompound.setBoolean("lamp", false);
 		}
+		itemstack.stackTagCompound.setBoolean("autorelease", components.upgrades.containsKey(Names.Items.BUTTON_AUTO_RELEASE));
 		return itemstack;
 	}
 

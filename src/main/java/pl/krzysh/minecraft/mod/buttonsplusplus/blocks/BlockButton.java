@@ -7,6 +7,7 @@ import static net.minecraftforge.common.util.ForgeDirection.WEST;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -183,25 +184,29 @@ public class BlockButton extends Block implements ITileEntityProvider {
 		TileEntityButton tileentity = (TileEntityButton) world.getTileEntity(x, y, z);
 		if(tileentity == null) return true;
 
-		tileentity.active = !tileentity.active;
-		if (tileentity.active)
+		if (!tileentity.active)
 		{
+			tileentity.active = true;
 			world.markBlockForUpdate(x, y, z);
 			world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
 			world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "random.click", 0.3F, 0.6F);
 			this.updateNeighbors(world, x, y, z, tileentity.orientation);
-			world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-			return true;
+			if(tileentity.autorelease) {
+				world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
+			}
 		}
 		else
 		{
-			world.markBlockForUpdate(x, y, z);
-			world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
-			world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "random.click", 0.3F, 0.5F);
-			this.updateNeighbors(world, x, y, z, tileentity.orientation);
-			world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-			return true;
+			if(!tileentity.autorelease) {
+				tileentity.active = false;
+				world.markBlockForUpdate(x, y, z);
+				world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+				world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "random.click", 0.3F, 0.5F);
+				this.updateNeighbors(world, x, y, z, tileentity.orientation);
+				world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
+			}
 		}
+		return true;
 	}
 
 	@Override
@@ -348,5 +353,27 @@ public class BlockButton extends Block implements ITileEntityProvider {
 		ret.add(stack);
 		
 		return ret;
+	}
+	
+    public int tickRate(World world)
+    {
+        return 20; //TODO: make this configurable via upgrades
+        // (I have no idea how since we don't even get coordinates, but... :p)
+    }
+	
+	@Override
+	public void updateTick(World world, int x, int y, int z, Random random) {
+        if (!world.isRemote)
+        {
+    		TileEntityButton tileentity = (TileEntityButton) world.getTileEntity(x, y, z);
+    		if(tileentity == null) return;
+    		if(!tileentity.autorelease) return;
+    		
+			tileentity.active = false;
+			world.markBlockForUpdate(x, y, z);
+			world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+			world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "random.click", 0.3F, 0.5F);
+			this.updateNeighbors(world, x, y, z, tileentity.orientation);
+        }
 	}
 }

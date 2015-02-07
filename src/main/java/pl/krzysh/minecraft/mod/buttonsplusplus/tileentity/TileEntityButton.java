@@ -20,6 +20,7 @@ public class TileEntityButton extends TileEntity {
 	public String text = "";
 	public boolean lamp = false;
 	public int lamp_color = MinecraftRainbow.RED.color;
+	public boolean autorelease = false;
 	
 	public void writeToItemNBT(NBTTagCompound tag) {
 		tag.setInteger("click_color", this.click_color);
@@ -29,8 +30,10 @@ public class TileEntityButton extends TileEntity {
 		tag.setString("text", this.text);
 		tag.setBoolean("lamp", this.lamp);
 		tag.setInteger("lamp_color", this.lamp_color);
+		tag.setBoolean("autorelease", this.autorelease);
 	}
 
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setBoolean("active", this.active);
@@ -47,8 +50,10 @@ public class TileEntityButton extends TileEntity {
 		this.text = tag.getString("text");
 		this.lamp = tag.getBoolean("lamp");
 		this.lamp_color = tag.getInteger("lamp_color");
+		this.autorelease = tag.getBoolean("autorelease");
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.active = tag.getBoolean("active");

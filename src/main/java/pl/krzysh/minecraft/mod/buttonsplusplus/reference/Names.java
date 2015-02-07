@@ -19,6 +19,7 @@ public class Names {
 		public static final String BUTTON_PART = "button_part";
 		public static final String BUTTON_LABEL = "button_label";
 		public static final String BUTTON_LAMP = "button_lamp";
+		public static final String BUTTON_AUTO_RELEASE = "button_auto_release";
 		public static final String BUTTON_BUILDING_MATERIAL = "button_building_material";
 	}
 }
