@@ -34,7 +34,7 @@ archivesBaseName = "buttonsplusplus"
 
 minecraft {
     version = "1.7.10-10.13.2.1291"
-    runDir = "eclipse"
+    runDir = "run"
 }
 
 jar {

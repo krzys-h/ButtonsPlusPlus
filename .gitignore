@@ -2,8 +2,12 @@
 build
 bin
 
-# Eclipse workspace (generated with ./gradlew eclipse)
-eclipse
+# Game run directory
+run
 
 # Gradle cache
 .gradle
+
+# Eclipse project files
+.classpath
+.settings
