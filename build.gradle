@@ -15,6 +15,17 @@ buildscript {
     }
 }
 
+repositories {
+    maven {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
+    maven {
+        name 'ForgeFS'
+        url 'http://files.minecraftforge.net/maven'
+     }
+}
+
 apply plugin: 'forge'
 
 version = "1.0"
@@ -24,6 +35,13 @@ archivesBaseName = "buttonsplusplus"
 minecraft {
     version = "1.7.10-10.13.2.1291"
     runDir = "eclipse"
+}
+
+jar {
+	manifest {
+	    attributes 'FMLCorePlugin': 'codechicken.core.launch.DepLoader'
+	    attributes 'FMLCorePluginContainsFMLMod': 'true'
+	}
 }
 
 dependencies {
@@ -40,7 +58,9 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    compile fileTree(dir: 'lib', includes: ['*.jar'])
+    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.110:dev"
+    compile "codechicken:ForgeMultipart:1.7.10-1.1.1.320:dev"
+    compile "codechicken:NotEnoughItems:1.7.10-1.0.4.83:dev"
 }
 
 processResources
