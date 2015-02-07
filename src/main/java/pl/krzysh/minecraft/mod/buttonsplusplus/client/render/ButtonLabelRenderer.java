@@ -14,8 +14,7 @@ public class ButtonLabelRenderer implements IItemRenderer {
 	}
 
 	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-			ItemRendererHelper helper) {
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
 		return false;
 	}
 
@@ -38,7 +37,7 @@ public class ButtonLabelRenderer implements IItemRenderer {
 			default:
 				break;
 		}
-		
+
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(0.75F, 0.75F, 0.75F);
 		GL11.glBegin(GL11.GL_QUADS);
@@ -58,12 +57,12 @@ public class ButtonLabelRenderer implements IItemRenderer {
 				GL11.glRotatef(180F, 0F, 1F, 0F);
 			float x = textRotate ? 1F : -1F;
 			float x2 = textRotate ? 0 : 5F;
-			GL11.glTranslatef(17.5F*x, 14F*x-x2, -0.1F*x);
+			GL11.glTranslatef(17.5F * x, 14F * x - x2, -0.1F * x);
 			GL11.glDepthMask(false);
 			fontrenderer.drawString(item.getDisplayName(), -fontrenderer.getStringWidth(item.getDisplayName()) / 2, 0, 0);
 			GL11.glDepthMask(true);
 		}
-		
+
 		GL11.glPopMatrix();
 	}
 }

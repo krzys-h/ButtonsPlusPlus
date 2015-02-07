@@ -15,22 +15,20 @@ import pl.krzysh.minecraft.mod.buttonsplusplus.util.Color;
 
 public class ButtonRenderer extends TileEntitySpecialRenderer implements IItemRenderer {
 	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double x, double y,
-			double z, float f) {
-		TileEntityButton tile = (TileEntityButton) tileEntity;
-		
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
+		TileEntityButton tile = (TileEntityButton)tileEntity;
+
 		GL11.glPushMatrix();
 		scaleTranslateRotate(x, y, z, tile.orientation);
 		renderButton(tile);
 		GL11.glPopMatrix();
 	}
-	
-	private void renderButton(TileEntityButton tile)
-	{
-		GL11.glTranslatef((1-tile.size)/2, 0F, (1-tile.size)/2);
+
+	private void renderButton(TileEntityButton tile) {
+		GL11.glTranslatef((1 - tile.size) / 2, 0F, (1 - tile.size) / 2);
 		GL11.glScalef(tile.size, tile.size, tile.size);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		
+
 		Color base_color = new Color(tile.base_color);
 		GL11.glColor3f(base_color.getRf(), base_color.getGf(), base_color.getBf());
 		IModelCustom base_model = ModelLibrary.getModel("base", tile.base);
@@ -43,18 +41,17 @@ public class ButtonRenderer extends TileEntitySpecialRenderer implements IItemRe
 			if(tile.lamp) {
 				//TODO: make this look more AWESOME :P
 				Color lamp_color = new Color(tile.lamp_color);
-				click_color.setRf(0.5F*click_color.getRf()+0.5F*lamp_color.getRf());
-				click_color.setGf(0.5F*click_color.getGf()+0.5F*lamp_color.getGf());
-				click_color.setBf(0.5F*click_color.getBf()+0.5F*lamp_color.getBf());
+				click_color.setRf(0.5F * click_color.getRf() + 0.5F * lamp_color.getRf());
+				click_color.setGf(0.5F * click_color.getGf() + 0.5F * lamp_color.getGf());
+				click_color.setBf(0.5F * click_color.getBf() + 0.5F * lamp_color.getBf());
 			}
 		}
 		GL11.glColor3f(click_color.getRf(), click_color.getGf(), click_color.getBf());
 		IModelCustom click_model = ModelLibrary.getModel("click", tile.click);
 		if(click_model != null)
 			click_model.renderAll();
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
 
 		FontRenderer fontrenderer = this.func_147498_b();
 		if(fontrenderer != null) {
@@ -67,44 +64,34 @@ public class ButtonRenderer extends TileEntitySpecialRenderer implements IItemRe
 			GL11.glDepthMask(true);
 		}
 	}
-	
+
 	// "Stolen" from https://github.com/pahimar/Equivalent-Exchange-3/blob/4230e778060bbe451ec2e4e7cf9de50253bd495b/src/main/java/com/pahimar/ee3/client/renderer/tileentity/TileEntityRendererAludel.java#L89-L115 ;)
-	private void scaleTranslateRotate(double x, double y, double z, ForgeDirection orientation)
-	{
-		if (orientation == ForgeDirection.NORTH)
-		{
+	private void scaleTranslateRotate(double x, double y, double z, ForgeDirection orientation) {
+		if(orientation == ForgeDirection.NORTH) {
 			GL11.glTranslated(x + 1, y, z);
 			GL11.glRotatef(180F, 0F, 1F, 0F);
 			GL11.glRotatef(-90F, 1F, 0F, 0F);
-		}
-		else if (orientation == ForgeDirection.EAST)
-		{
+		} else if(orientation == ForgeDirection.EAST) {
 			GL11.glTranslated(x + 1, y, z + 1);
 			GL11.glRotatef(90F, 0F, 1F, 0F);
 			GL11.glRotatef(-90F, 1F, 0F, 0F);
-		}
-		else if (orientation == ForgeDirection.SOUTH)
-		{
+		} else if(orientation == ForgeDirection.SOUTH) {
 			GL11.glTranslated(x, y, z + 1);
 			GL11.glRotatef(0F, 0F, 1F, 0F);
 			GL11.glRotatef(-90F, 1F, 0F, 0F);
-		}
-		else if (orientation == ForgeDirection.WEST)
-		{
+		} else if(orientation == ForgeDirection.WEST) {
 			GL11.glTranslated(x, y, z);
 			GL11.glRotatef(-90F, 0F, 1F, 0F);
 			GL11.glRotatef(-90F, 1F, 0F, 0F);
 		}
 	}
-	
-	
+
 	public boolean handleRenderType(ItemStack itemStack, ItemRenderType type) {
 		return true;
 	}
-	
+
 	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-					ItemRendererHelper helper) {
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
 		return false;
 	}
 
@@ -125,7 +112,7 @@ public class ButtonRenderer extends TileEntitySpecialRenderer implements IItemRe
 			default:
 				break;
 		}
-		
+
 		TileEntityButton tile = new TileEntityButton();
 		if(itemStack.stackTagCompound != null) {
 			tile.base = itemStack.stackTagCompound.getString("base");
@@ -134,7 +121,7 @@ public class ButtonRenderer extends TileEntitySpecialRenderer implements IItemRe
 			tile.click_color = itemStack.stackTagCompound.getInteger("click_color");
 		}
 		renderButton(tile);
-		
+
 		GL11.glPopMatrix();
 	}
 }

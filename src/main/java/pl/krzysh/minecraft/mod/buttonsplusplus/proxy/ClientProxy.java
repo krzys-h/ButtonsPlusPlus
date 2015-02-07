@@ -13,10 +13,9 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void registerRenderers()
-	{
+	public void registerRenderers() {
 		ModelLibrary.init();
-		
+
 		ButtonRenderer buttonRenderer = new ButtonRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityButton.class, buttonRenderer);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.button), buttonRenderer);

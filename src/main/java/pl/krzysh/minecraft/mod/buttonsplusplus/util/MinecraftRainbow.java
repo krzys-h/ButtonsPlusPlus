@@ -1,6 +1,8 @@
 package pl.krzysh.minecraft.mod.buttonsplusplus.util;
 
 public enum MinecraftRainbow {
+	// It breaks my code again
+	//@formatter:off
 	WHITE(0xDDDDDD),
 	ORANGE(0xDB7D3E),
 	MAGENTA(0xB350BC),
@@ -17,10 +19,15 @@ public enum MinecraftRainbow {
 	GREEN(0x35461B),
 	RED(0x963430),
 	BLACK(0x191616);
+	//@formatter:on
 
 	public int color;
-	private MinecraftRainbow(int color)
-	{
+
+	private MinecraftRainbow(int color) {
 		this.color = color;
+	}
+
+	public Color getColor() {
+		return new Color(this.color);
 	}
 }

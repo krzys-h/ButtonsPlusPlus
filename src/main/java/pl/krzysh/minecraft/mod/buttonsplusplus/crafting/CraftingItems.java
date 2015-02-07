@@ -12,8 +12,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CraftingItems {
 	//TODO: coloring
-	public static void registerCrafting()
-	{
+	public static void registerCrafting() {
+		// Do not break my formatting, please!
+		//@formatter:off
+		
 		//TODO: temporary recipe until I figure out something better
 		GameRegistry.addSmelting(
 			new ItemStack(Item.getItemFromBlock(Blocks.stonebrick)),
@@ -64,5 +66,7 @@ public class CraftingItems {
 			'#', ModItems.button_building_material,
 			'L', Item.getItemFromBlock(Blocks.redstone_lamp)
 		);
+		
+		//@formatter:on
 	}
 }

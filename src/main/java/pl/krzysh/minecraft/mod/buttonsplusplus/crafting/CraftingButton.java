@@ -13,7 +13,7 @@ import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 public class CraftingButton implements IRecipe {
 	// We might need more recipes later
 	ICraftingButtonRecipe recipe = new CraftingButtonRecipe();
-	
+
 	@Override
 	public boolean matches(InventoryCrafting craftingTable, World world) {
 		return recipe.getComponents(craftingTable) != null;
@@ -22,8 +22,9 @@ public class CraftingButton implements IRecipe {
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting craftingTable) {
 		ICraftingButtonRecipe.CraftingButtonComponents components = recipe.getComponents(craftingTable);
-		if(components == null) return null;
-		
+		if(components == null)
+			return null;
+
 		ItemStack itemstack = new ItemStack(Item.getItemFromBlock(ModBlocks.button), 1);
 		itemstack.stackTagCompound = new NBTTagCompound();
 		itemstack.stackTagCompound.setString("base", components.base.stackTagCompound.getString("part"));

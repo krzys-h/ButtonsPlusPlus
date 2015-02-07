@@ -15,34 +15,35 @@ public class ItemBlockButton extends ItemBlock {
 	public ItemBlockButton(Block block) {
 		super(block);
 	}
-	
+
 	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
-	{
-		if(stack.stackTagCompound == null) return false;
-		
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata) {
+		if(stack.stackTagCompound == null)
+			return false;
+
 		boolean ret = super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata);
-		
-		TileEntityButton tileentity = (TileEntityButton) world.getTileEntity(x, y, z);
-		if(tileentity == null) return ret;
+
+		TileEntityButton tileentity = (TileEntityButton)world.getTileEntity(x, y, z);
+		if(tileentity == null)
+			return ret;
 
 		tileentity.orientation = ForgeDirection.getOrientation(side).getOpposite();
 		tileentity.fromItem(stack);
-		
+
 		return ret;
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
-		if (itemstack.stackTagCompound != null) {
+		if(itemstack.stackTagCompound != null) {
 			String text = itemstack.stackTagCompound.getString("text");
 			String base = itemstack.stackTagCompound.getString("base");
 			String click = itemstack.stackTagCompound.getString("click");
 			if(!text.isEmpty()) {
-				list.add("Text: "+text);
+				list.add("Text: " + text);
 			}
-			list.add("Base: "+base);
-			list.add("Click: "+click);
+			list.add("Base: " + base);
+			list.add("Click: " + click);
 		}
 	}
 }

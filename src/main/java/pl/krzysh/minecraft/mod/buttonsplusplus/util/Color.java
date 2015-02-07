@@ -28,61 +28,61 @@ public class Color {
 	public int toInteger() {
 		throw new RuntimeException("Not yet implemented");
 	}
-	
+
 	public int getR() {
 		return this.r;
 	}
-	
+
 	public int getG() {
 		return this.g;
 	}
-	
+
 	public int getB() {
 		return this.b;
 	}
-	
+
 	public float getRf() {
-		return getR()/255F;
+		return getR() / 255F;
 	}
-	
+
 	public float getGf() {
-		return getG()/255F;
+		return getG() / 255F;
 	}
-	
+
 	public float getBf() {
-		return getB()/255F;
+		return getB() / 255F;
 	}
-	
+
 	public void setR(int r) {
 		this.r = r;
 	}
-	
+
 	public void setG(int g) {
 		this.g = g;
 	}
-	
+
 	public void setB(int b) {
 		this.b = b;
 	}
-	
+
 	public void set(int r, int g, int b) {
 		setR(r);
 		setG(g);
 		setB(b);
 	}
-	
+
 	public void setRf(float r) {
-		this.r = Math.round(r*255F);
+		this.r = Math.round(r * 255F);
 	}
-	
+
 	public void setGf(float g) {
-		this.g = Math.round(g*255F);
+		this.g = Math.round(g * 255F);
 	}
-	
+
 	public void setBf(float b) {
-		this.b = Math.round(b*255F);
+		this.b = Math.round(b * 255F);
 	}
-	
+
 	public void setf(float r, float g, float b) {
 		setRf(r);
 		setGf(g);

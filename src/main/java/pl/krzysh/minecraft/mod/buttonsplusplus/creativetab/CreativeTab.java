@@ -6,11 +6,9 @@ import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModBlocks;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Version;
 
 public class CreativeTab {
-	public static final CreativeTabs buttons = new CreativeTabs(Version.MODID.toLowerCase())
-	{
+	public static final CreativeTabs buttons = new CreativeTabs(Version.MODID.toLowerCase()) {
 		@Override
-		public Item getTabIconItem()
-		{
+		public Item getTabIconItem() {
 			return Item.getItemFromBlock(ModBlocks.button);
 		}
 	};

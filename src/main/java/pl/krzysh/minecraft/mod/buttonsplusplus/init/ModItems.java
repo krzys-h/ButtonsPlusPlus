@@ -16,9 +16,8 @@ public class ModItems {
 	public static final ItemButtonLabel button_label = new ItemButtonLabel();
 	public static final ItemButtonUpgradeLamp button_lamp = new ItemButtonUpgradeLamp();
 	public static final ItemButtonUpgradeAutoRelease button_auto_release = new ItemButtonUpgradeAutoRelease();
-	
-	public static void init()
-	{
+
+	public static void init() {
 		GameRegistry.registerItem(button_building_material, Names.Items.BUTTON_BUILDING_MATERIAL);
 		GameRegistry.registerItem(button_part, Names.Items.BUTTON_PART);
 		GameRegistry.registerItem(button_label, Names.Items.BUTTON_LABEL);

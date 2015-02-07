@@ -15,15 +15,15 @@ public class ButtonPartRenderer implements IItemRenderer {
 	}
 
 	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-			ItemRendererHelper helper) {
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
 		return false;
 	}
 
 	@Override
 	public void renderItem(ItemRenderType rendertype, ItemStack itemstack, Object... data) {
-		if(itemstack.stackTagCompound == null) return;
-		
+		if(itemstack.stackTagCompound == null)
+			return;
+
 		GL11.glPushMatrix();
 		switch(rendertype) {
 			case INVENTORY:
@@ -39,9 +39,9 @@ public class ButtonPartRenderer implements IItemRenderer {
 			default:
 				break;
 		}
-		
+
 		String type = itemstack.stackTagCompound.getString("type");
-		String part = itemstack.stackTagCompound.getString("part"); 
+		String part = itemstack.stackTagCompound.getString("part");
 		IModelCustom model = ModelLibrary.getModel(type, part);
 
 		if(model != null) {
@@ -53,7 +53,7 @@ public class ButtonPartRenderer implements IItemRenderer {
 			model.renderAll();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
-		
+
 		GL11.glPopMatrix();
 	}
 }
