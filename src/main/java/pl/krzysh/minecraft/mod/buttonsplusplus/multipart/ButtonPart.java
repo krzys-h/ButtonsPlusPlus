@@ -115,13 +115,18 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
 
 	private void toggle()
 	{
-		tile.active = !tile.active;
-		world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, tile.active ? 0.6F : 0.5F);
-		
-		sendDescUpdate();
-		tile().notifyPartChange(this);
-		tile().notifyNeighborChange(tile.orientation.ordinal());
-		tile().markDirty();
+		if(!tile.active || !tile.autorelease) {
+			tile.active = !tile.active;
+			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, tile.active ? 0.6F : 0.5F);
+			
+			sendDescUpdate();
+			tile().notifyPartChange(this);
+			tile().notifyNeighborChange(tile.orientation.ordinal());
+			tile().markDirty();
+			if(tile.active && tile.autorelease) {
+				scheduleTick(20);
+			}
+		}
 	}
 	
 	@Override
@@ -226,5 +231,19 @@ public class ButtonPart extends McSidedMetaPart implements IFaceRedstonePart
 			TileMultipart.dropItem(stack, world(), Vector3.fromTileEntityCenter(tile()));
 		}
 		tile().remPart(this);
+	}
+	
+	@Override
+	public void scheduledTick()
+	{
+		if(tile.active && tile.autorelease) {
+			tile.active = false;
+			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, 0.5F);
+		
+			sendDescUpdate();
+			tile().notifyPartChange(this);
+			tile().notifyNeighborChange(tile.orientation.ordinal());
+			tile().markDirty();
+		}
 	}
 }
