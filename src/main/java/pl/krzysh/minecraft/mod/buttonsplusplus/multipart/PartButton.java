@@ -155,10 +155,15 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		}
 		tile().remPart(this);
 	}
-
+	
 	private void resyncAfterUpdate(boolean redstoneChanged, boolean lightChanged) {
+		resyncAfterUpdate(redstoneChanged, lightChanged, false);
+	}
+
+	private void resyncAfterUpdate(boolean redstoneChanged, boolean lightChanged, boolean destroyed) {
 		//TODO: figure out how to force light update, it doesn't do it properly
-		sendDescUpdate();
+		if(!destroyed)
+			sendDescUpdate();
 		tile().notifyPartChange(this);
 		if(redstoneChanged)
 			tile().notifyNeighborChange(this.orientation.ordinal());
@@ -251,6 +256,9 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	public void toggleButton(boolean newState) {
 		if(this.active == newState)
 			return;
+		
+		if(world().isRemote)
+			throw new RuntimeException("Don't do this clientside");
 
 		this.active = newState;
 		world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, this.active ? 0.6F : 0.5F);
@@ -282,8 +290,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 
 	@Override
 	public void onRemoved() {
-		resyncAfterUpdate(this.active, this.getLampOn());
-		//tile().notifyNeighborChange(this.orientation.ordinal());
+		resyncAfterUpdate(this.active, this.getLampOn(), true);
 	}
 
 	@Override
