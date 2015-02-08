@@ -34,9 +34,12 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft")
 public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IPeripheral {
+	// Persistent only in a block form
 	public boolean active = false;
 	public ForgeDirection orientation = ForgeDirection.NORTH;
-	public float size = 0.5f;
+	public float size = 0.5f; //TODO: move to item
+
+	// Persistent as block or item
 	public int click_color = MinecraftRainbow.RED.color;
 	public int base_color = MinecraftRainbow.GRAY.color;
 	public String base = "cube";
@@ -46,30 +49,13 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	public int lamp_color = MinecraftRainbow.RED.color;
 	public boolean autorelease = false;
 
+	// Not persistent (cleared after chunk unload)
 	public int computer_control = 0;
 	public boolean computer_lamp_auto = true;
 	public boolean computer_lamp_on = false;
 	public boolean computer_autorelease = true;
 
-	public boolean getLampOn() {
-		return this.computer_control > 0 ? (this.computer_lamp_on || (this.computer_lamp_auto && this.active)) && this.lamp : this.lamp && this.active;
-	}
-
-	public boolean getAutorelease() {
-		return this.computer_control > 0 ? this.computer_autorelease && this.autorelease : this.autorelease;
-	}
-
-	IPartRenderer renderer = new ButtonRenderer();
-
-	public PartButton() {
-		super();
-	}
-
-	public PartButton(ForgeDirection orientation, ItemStack item) {
-		super();
-		this.orientation = orientation;
-		this.fromItem(item);
-	}
+	//// Data storage (NBT and network packets) ////
 
 	public void saveItem(NBTTagCompound tag) {
 		tag.setInteger("click_color", this.click_color);
@@ -145,6 +131,52 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		this.computer_autorelease = tag.getBoolean("computer_autorelease");
 	}
 
+	//// Stuff for persisting data from block when dropped as item ////
+
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit) {
+		ItemStack stack = new ItemStack(ModItems.button);
+		this.toItem(stack);
+		return stack;
+	}
+
+	@Override
+	public Iterable<ItemStack> getDrops() {
+		ItemStack stack = new ItemStack(ModItems.button);
+		this.toItem(stack);
+		return Arrays.asList(stack);
+	}
+
+	// TODO: Why McSidedMetaPart doesn't do it like this?
+	@Override
+	public void drop() {
+		for(ItemStack stack : getDrops()) {
+			TileMultipart.dropItem(stack, world(), Vector3.fromTileEntityCenter(tile()));
+		}
+		tile().remPart(this);
+	}
+
+	private void resyncAfterUpdate(boolean redstoneChanged, boolean lightChanged) {
+		//TODO: figure out how to force light update, it doesn't do it properly
+		sendDescUpdate();
+		tile().notifyPartChange(this);
+		if(redstoneChanged)
+			tile().notifyNeighborChange(this.orientation.ordinal());
+		tile().markDirty();
+	}
+
+	//// Multipart/block configuration ////
+
+	public PartButton() {
+		super();
+	}
+
+	public PartButton(ForgeDirection orientation, ItemStack item) {
+		super();
+		this.orientation = orientation;
+		this.fromItem(item);
+	}
+
 	@Override
 	public int sideForMeta(int meta) {
 		return this.orientation.ordinal();
@@ -214,33 +246,44 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		return new PartButton(ForgeDirection.getOrientation(side).getOpposite(), stack);
 	}
 
-	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item) {
-		if(!world().isRemote)
-			toggle();
+	//// Button logic ////
 
-		return true;
+	public void toggleButton(boolean newState) {
+		if(this.active == newState)
+			return;
+
+		this.active = newState;
+		world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, this.active ? 0.6F : 0.5F);
+
+		resyncAfterUpdate(true, this.getAutoLamp());
+		if(this.active && this.getAutoRelease()) {
+			scheduleTick(20); //TODO: make time customizable via upgrades
+		}
 	}
 
-	private void toggle() {
-		if(!this.active || !this.getAutorelease()) {
-			this.active = !this.active;
-			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, this.active ? 0.6F : 0.5F);
-
-			sendDescUpdate();
-			tile().notifyPartChange(this);
-			tile().notifyNeighborChange(this.orientation.ordinal());
-			tile().markDirty();
-			if(this.active && this.getAutorelease()) {
-				scheduleTick(20); //TODO: make time customizable via upgrades
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item) {
+		if(!world().isRemote) {
+			if(!this.active || !this.getAutoRelease()) {
+				toggleButton(!this.active);
+				return true;
 			}
+		}
+
+		return super.activate(player, part, item);
+	}
+
+	@Override
+	public void scheduledTick() {
+		if(this.active && this.getAutoRelease()) {
+			toggleButton(false);
 		}
 	}
 
 	@Override
 	public void onRemoved() {
-		if(this.active)
-			tile().notifyNeighborChange(this.orientation.ordinal());
+		resyncAfterUpdate(this.active, this.getLampOn());
+		//tile().notifyNeighborChange(this.orientation.ordinal());
 	}
 
 	@Override
@@ -264,6 +307,15 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	}
 
 	@Override
+	public int getLightValue() {
+		return this.getLampOn() ? 7 : 0;
+	}
+
+	//// Rendering ////
+
+	IPartRenderer renderer = new ButtonRenderer();
+
+	@Override
 	public boolean renderStatic(Vector3 pos, int pass) {
 		return false;
 	}
@@ -274,47 +326,6 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	}
 
 	@Override
-	public int getLightValue() {
-		return this.getLampOn() ? 7 : 0;
-	}
-
-	@Override
-	public ItemStack pickItem(MovingObjectPosition hit) {
-		ItemStack stack = new ItemStack(ModItems.button);
-		this.toItem(stack);
-		return stack;
-	}
-
-	@Override
-	public Iterable<ItemStack> getDrops() {
-		ItemStack stack = new ItemStack(ModItems.button);
-		this.toItem(stack);
-		return Arrays.asList(stack);
-	}
-
-	// TODO: Why McSidedMetaPart doesn't do it like this?
-	@Override
-	public void drop() {
-		for(ItemStack stack : getDrops()) {
-			TileMultipart.dropItem(stack, world(), Vector3.fromTileEntityCenter(tile()));
-		}
-		tile().remPart(this);
-	}
-
-	@Override
-	public void scheduledTick() {
-		if(this.active && this.getAutorelease()) {
-			this.active = false;
-			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, 0.5F);
-
-			sendDescUpdate();
-			tile().notifyPartChange(this);
-			tile().notifyNeighborChange(this.orientation.ordinal());
-			tile().markDirty();
-		}
-	}
-
-	@Override
 	public IIcon getBreakingIcon(Object subPart, int side) {
 		return null; //TODO
 	}
@@ -322,6 +333,20 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	@Override
 	public IIcon getBrokenIcon(int side) {
 		return null; //TODO
+	}
+
+	//// ComputerCraft integration ////
+
+	public boolean getLampOn() {
+		return this.computer_control > 0 ? (this.computer_lamp_on || (this.computer_lamp_auto && this.active)) && this.lamp : this.lamp && this.active;
+	}
+
+	public boolean getAutoLamp() {
+		return this.computer_control > 0 ? this.computer_lamp_auto && this.lamp : this.lamp;
+	}
+
+	public boolean getAutoRelease() {
+		return this.computer_control > 0 ? this.computer_autorelease && this.autorelease : this.autorelease;
 	}
 
 	@Optional.Method(modid = "ComputerCraft")
@@ -335,49 +360,71 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		switch(method) {
 			case 0: // getPressed
-				//TODO: check parameters
+				if(arguments.length != 0)
+					throw new LuaException("Excpected 0 arguments");
+
 				return new Object[] { this.active };
 			case 1: // setPressed
-				//TODO: check parameters
+				if(arguments.length != 1)
+					throw new LuaException("Excpected 1 argument");
+				if(!(arguments[0] instanceof Boolean))
+					throw new LuaException("Excpected boolean as first argument");
+
 				boolean newstate = (Boolean) arguments[0];
-				if(newstate != this.active) {
-					this.active = newstate;
-					world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, this.active ? 0.6F : 0.5F);
-					sendDescUpdate();
-					tile().notifyPartChange(this);
-					tile().notifyNeighborChange(this.orientation.ordinal());
-					tile().markDirty();
-					return new Object[] {};
-				}
+				if(!newstate && this.getAutoRelease())
+					throw new LuaException("You can't turn off button in autorelease mode manually");
+
+				toggleButton(newstate);
+				return null;
 			case 2: // getLamp
-				//TODO: check parameters
-				return new Object[] { this.computer_lamp_on };
+				if(arguments.length != 0)
+					throw new LuaException("Excpected 0 arguments");
+
+				return new Object[] { this.getLampOn() };
 			case 3: // setLamp
-				//TODO: check parameters
+				if(arguments.length != 1)
+					throw new LuaException("Excpected 1 argument");
+				if(!(arguments[0] instanceof Boolean))
+					throw new LuaException("Excpected boolean as first argument");
+
+				if(!this.lamp)
+					throw new LuaException("This button doesn't have a lamp installed");
+				if(this.computer_lamp_auto)
+					throw new LuaException("The lamp is in automatic mode, use .configureAutoLamp(false) to disable");
+
 				this.computer_lamp_on = (Boolean) arguments[0];
-				sendDescUpdate();
-				tile().notifyPartChange(this);
-				tile().notifyNeighborChange(this.orientation.ordinal());
-				tile().markDirty();
-				return new Object[] {};
+				resyncAfterUpdate(false, true);
+				return null;
 			case 4: // configureAutoRelease
-				//TODO: check parameters
+				if(arguments.length != 1)
+					throw new LuaException("Excpected 1 argument");
+				if(!(arguments[0] instanceof Boolean))
+					throw new LuaException("Excpected boolean as first argument");
+
+				if(!this.autorelease)
+					throw new LuaException("This button doesn't have an autorelease module installed");
+
 				this.computer_autorelease = (Boolean) arguments[0];
-				sendDescUpdate();
-				tile().notifyPartChange(this);
-				tile().markDirty();
-				this.scheduledTick();
-				return new Object[] {};
+				resyncAfterUpdate(false, false);
+				if(this.active && this.computer_autorelease)
+					toggleButton(false);
+				return null;
 			case 5: // configureAutoLamp
+				if(arguments.length != 1)
+					throw new LuaException("Excpected 1 argument");
+				if(!(arguments[0] instanceof Boolean))
+					throw new LuaException("Excpected boolean as first argument");
+
+				if(!this.lamp)
+					throw new LuaException("This button doesn't have a lamp installed");
+
 				this.computer_lamp_auto = (Boolean) arguments[0];
-				sendDescUpdate();
-				tile().notifyPartChange(this);
-				tile().notifyNeighborChange(this.orientation.ordinal());
-				tile().markDirty();
-				return new Object[] {};
+				this.computer_lamp_on = false;
+				resyncAfterUpdate(false, this.active);
+				return null;
 			default:
-				System.out.println("Attempted to call unknown method from computer with ID " + computer.getID());
-				return new Object[] { "Unknown method" };
+				System.out.println("Attempted to call unknown method " + method + " from computer with ID " + computer.getID());
+				throw new LuaException("Unknown method. This should never happen, please report this as a bug.");
 		}
 	}
 
