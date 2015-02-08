@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.krzysh.minecraft.mod.buttonsplusplus.ButtonPartRegistry;
 import pl.krzysh.minecraft.mod.buttonsplusplus.creativetab.CreativeTab;
-import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModItems;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import pl.krzysh.minecraft.mod.buttonsplusplus.util.MinecraftRainbow;
 
@@ -20,7 +19,8 @@ public class ItemButtonPart extends BaseItem {
 		setCreativeTab(CreativeTab.buttons);
 		setUnlocalizedName(Names.Items.BUTTON_PART);
 	}
-	
+
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
 		for (String type : ButtonPartRegistry.instance.getTypes()) {

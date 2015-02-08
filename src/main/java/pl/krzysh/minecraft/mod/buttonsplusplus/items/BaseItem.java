@@ -19,6 +19,7 @@ public class BaseItem extends Item {
 		return this.colorable;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
 		if(this.colorable) {
@@ -28,6 +29,7 @@ public class BaseItem extends Item {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void getColorSubItems(Item item, List list, NBTTagCompound nbt) {
 		for(MinecraftRainbow color : MinecraftRainbow.values()) {
 			ItemStack stack = new ItemStack(item);

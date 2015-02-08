@@ -3,6 +3,7 @@ package codechicken.core.launch;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import cpw.mods.fml.common.versioning.ComparableVersion;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
@@ -15,6 +16,7 @@ import sun.net.util.URLUtil;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.WindowAdapter;
@@ -291,7 +293,8 @@ public class DepLoader implements IFMLLoadingPlugin, IFMLCallHook {
             }
         }
 
-        private void deleteMod(File mod) {
+        @SuppressWarnings("unchecked")
+		private void deleteMod(File mod) {
             if (mod.delete())
                 return;
 

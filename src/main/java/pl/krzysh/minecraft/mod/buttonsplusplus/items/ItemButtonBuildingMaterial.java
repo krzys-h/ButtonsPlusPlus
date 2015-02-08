@@ -1,6 +1,5 @@
 package pl.krzysh.minecraft.mod.buttonsplusplus.items;
 
-import net.minecraft.item.Item;
 import pl.krzysh.minecraft.mod.buttonsplusplus.creativetab.CreativeTab;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 
