@@ -10,9 +10,8 @@ public class ItemButtonLabel extends BaseItem {
 		setCreativeTab(CreativeTab.buttons);
 		setUnlocalizedName(Names.Items.BUTTON_LABEL);
 	}
-	
+
 	@Override
-	public void registerIcons(IIconRegister iconreg)
-	{
+	public void registerIcons(IIconRegister iconreg) {
 	}
 }

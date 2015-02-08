@@ -33,7 +33,7 @@ public class BaseItem extends Item {
 	protected void getColorSubItems(Item item, List list, NBTTagCompound nbt) {
 		for(MinecraftRainbow color : MinecraftRainbow.values()) {
 			ItemStack stack = new ItemStack(item);
-			stack.stackTagCompound = (NBTTagCompound)nbt.copy();
+			stack.stackTagCompound = (NBTTagCompound) nbt.copy();
 			stack.stackTagCompound.setInteger("color", color.color);
 			list.add(stack);
 		}

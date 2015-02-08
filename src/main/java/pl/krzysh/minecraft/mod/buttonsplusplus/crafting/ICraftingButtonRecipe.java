@@ -13,6 +13,6 @@ public interface ICraftingButtonRecipe {
 		public ItemStack label = null;
 		public Map<String, ItemStack> upgrades = new HashMap<String, ItemStack>();
 	}
-	
+
 	public CraftingButtonComponents getComponents(InventoryCrafting craftingTable);
 }

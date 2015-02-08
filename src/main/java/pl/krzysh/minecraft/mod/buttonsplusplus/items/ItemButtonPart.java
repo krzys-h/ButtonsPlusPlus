@@ -13,8 +13,7 @@ import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Names;
 import pl.krzysh.minecraft.mod.buttonsplusplus.util.MinecraftRainbow;
 
 public class ItemButtonPart extends BaseItem {
-	public ItemButtonPart()
-	{
+	public ItemButtonPart() {
 		super(true);
 		setCreativeTab(CreativeTab.buttons);
 		setUnlocalizedName(Names.Items.BUTTON_PART);
@@ -23,8 +22,8 @@ public class ItemButtonPart extends BaseItem {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
-		for (String type : ButtonPartRegistry.instance.getTypes()) {
-			for (String part : ButtonPartRegistry.instance.getParts(type)) {
+		for(String type : ButtonPartRegistry.instance.getTypes()) {
+			for(String part : ButtonPartRegistry.instance.getParts(type)) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setString("type", type);
 				nbt.setString("part", part);
@@ -32,10 +31,9 @@ public class ItemButtonPart extends BaseItem {
 			}
 		}
 	}
-	
+
 	@Override
-	public void registerIcons(IIconRegister iconreg)
-	{
+	public void registerIcons(IIconRegister iconreg) {
 	}
 
 	public ItemStack getItemStack(String type, String part) {

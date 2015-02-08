@@ -10,7 +10,8 @@ public class ModParts implements IPartFactory {
 	public static ModParts instance = null;
 
 	public static void init() {
-		if(instance != null) throw new RuntimeException("ModParts.init called twice!");
+		if(instance != null)
+			throw new RuntimeException("ModParts.init called twice!");
 		instance = new ModParts();
 		MultiPartRegistry.registerParts(instance, new String[] { Names.MultiParts.BUTTON });
 	}

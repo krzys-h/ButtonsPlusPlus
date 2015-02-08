@@ -34,7 +34,7 @@ public class ButtonsPlusPlus {
 	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 		Crafting.init();
-		
+
 		if(Loader.isModLoaded("ComputerCraft"))
 			IntegrationComputerCraft.init();
 	}

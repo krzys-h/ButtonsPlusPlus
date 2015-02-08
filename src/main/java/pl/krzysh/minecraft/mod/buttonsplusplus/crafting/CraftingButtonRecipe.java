@@ -26,7 +26,7 @@ public class CraftingButtonRecipe implements ICraftingButtonRecipe {
 					continue;
 				}
 				if(click.getItem() instanceof ItemButtonUpgrade) {
-					String upgradeType = ((ItemButtonUpgrade)click.getItem()).getUpgradeCategory();
+					String upgradeType = ((ItemButtonUpgrade) click.getItem()).getUpgradeCategory();
 					if(components.upgrades.containsKey(upgradeType))
 						return null;
 					components.upgrades.put(upgradeType, click);

@@ -16,7 +16,7 @@ import codechicken.multipart.TMultiPart;
 public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 	@Override
 	public void renderPartAt(TMultiPart multiPart, double x, double y, double z) {
-		PartButton part = (PartButton)multiPart;
+		PartButton part = (PartButton) multiPart;
 
 		GL11.glPushMatrix();
 		scaleTranslateRotate(x, y, z, part.orientation);
@@ -86,7 +86,7 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 			GL11.glRotatef(-90F, 0F, 1F, 0F);
 			GL11.glRotatef(-90F, 1F, 0F, 0F);
 		} else if(orientation == ForgeDirection.UP) {
-			GL11.glTranslated(x, y+1, z+1);
+			GL11.glTranslated(x, y + 1, z + 1);
 			GL11.glRotatef(180F, 1F, 0F, 0F);
 		} else if(orientation == ForgeDirection.DOWN) {
 			GL11.glTranslated(x, y, z);

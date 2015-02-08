@@ -3,11 +3,11 @@ package pl.krzysh.minecraft.mod.buttonsplusplus.client.render;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.krzysh.minecraft.mod.buttonsplusplus.ButtonPartRegistry;
-import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Version;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import pl.krzysh.minecraft.mod.buttonsplusplus.ButtonPartRegistry;
+import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Version;
 
 public class ModelLibrary {
 	public static Map<String, Map<String, IModelCustom>> models = null;

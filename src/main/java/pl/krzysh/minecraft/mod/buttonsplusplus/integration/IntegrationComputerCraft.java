@@ -23,10 +23,12 @@ public class IntegrationComputerCraft implements IPeripheralProvider {
 	@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(!(te instanceof TileMultipart)) return null;
+		if(!(te instanceof TileMultipart))
+			return null;
 		TileMultipart multipart = (TileMultipart) te;
 		for(TMultiPart thispart : multipart.jPartList()) {
-			if(!(thispart instanceof PartButton)) continue;
+			if(!(thispart instanceof PartButton))
+				continue;
 			PartButton part = (PartButton) thispart;
 			if(part.orientation.ordinal() == side) {
 				return (IPeripheral) part;
