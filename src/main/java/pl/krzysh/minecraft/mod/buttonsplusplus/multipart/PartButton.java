@@ -46,6 +46,19 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	public int lamp_color = MinecraftRainbow.RED.color;
 	public boolean autorelease = false;
 	
+	public int computer_control = 0;
+	public boolean computer_lamp_auto = true;
+	public boolean computer_lamp_on = false;
+	public boolean computer_autorelease = true;
+	public boolean getLampOn()
+	{
+		return this.computer_control > 0 ? (this.computer_lamp_on || (this.computer_lamp_auto && this.active)) && this.lamp : this.lamp && this.active;
+	}
+	public boolean getAutorelease()
+	{
+		return this.computer_control > 0 ? this.computer_autorelease && this.autorelease : this.autorelease;	
+	}
+	
 	IPartRenderer renderer = new ButtonRenderer();
 
 	public PartButton() {
@@ -58,7 +71,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		this.fromItem(item);
 	}
 	
-	public void writeToItemNBT(NBTTagCompound tag) {
+	public void saveItem(NBTTagCompound tag) {
 		tag.setInteger("click_color", this.click_color);
 		tag.setInteger("base_color", this.base_color);
 		tag.setString("base", this.base);
@@ -69,14 +82,16 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		tag.setBoolean("autorelease", this.autorelease);
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	@Override
+	public void save(NBTTagCompound tag) {
+		super.save(tag);
 		tag.setBoolean("active", this.active);
 		tag.setInteger("orientation", this.orientation.ordinal());
 		tag.setFloat("size", this.size); //TODO: move to item
-		this.writeToItemNBT(tag);
+		this.saveItem(tag);
 	}
 	
-	public void readFromItemNBT(NBTTagCompound tag) {
+	public void loadItem(NBTTagCompound tag) {
 		this.click_color = tag.getInteger("click_color");
 		this.base_color = tag.getInteger("base_color");
 		this.base = tag.getString("base");
@@ -87,23 +102,47 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		this.autorelease = tag.getBoolean("autorelease");
 	}
 
-	public void readFromNBT(NBTTagCompound tag) {
+	@Override
+	public void load(NBTTagCompound tag) {
+		super.save(tag);
 		this.active = tag.getBoolean("active");
 		this.orientation = ForgeDirection.getOrientation(tag.getInteger("orientation"));
 		this.size = tag.getFloat("size"); //TODO: move to item
-		this.readFromItemNBT(tag);
+		this.loadItem(tag);
 	}
 
 	public void fromItem(ItemStack item) {
 		if (item.stackTagCompound == null)
 			return;
-		this.readFromItemNBT(item.stackTagCompound);
+		this.loadItem(item.stackTagCompound);
 	}
 
 	public void toItem(ItemStack item) {
 		if (item.stackTagCompound == null)
 			item.stackTagCompound = new NBTTagCompound();
-		this.writeToItemNBT(item.stackTagCompound);
+		this.saveItem(item.stackTagCompound);
+	}
+
+	@Override
+	public void writeDesc(MCDataOutput packet) {
+		NBTTagCompound tag = new NBTTagCompound();
+		this.save(tag);
+		tag.setInteger("computer_control", this.computer_control);
+		tag.setBoolean("computer_lamp_auto", this.computer_lamp_auto);
+		tag.setBoolean("computer_lamp_on", this.computer_lamp_on);
+		tag.setBoolean("computer_autorelease", this.computer_autorelease);
+		packet.writeNBTTagCompound(tag);
+	}
+
+	@Override
+	public void readDesc(MCDataInput packet) {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag = packet.readNBTTagCompound();
+		this.load(tag);
+		this.computer_control = tag.getInteger("computer_control");
+		this.computer_lamp_auto = tag.getBoolean("computer_lamp_auto");
+		this.computer_lamp_on = tag.getBoolean("computer_lamp_on");
+		this.computer_autorelease = tag.getBoolean("computer_autorelease");
 	}
 
 	@Override
@@ -181,7 +220,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	}
 
 	private void toggle() {
-		if(!this.active || !this.autorelease) {
+		if(!this.active || !this.getAutorelease()) {
 			this.active = !this.active;
 			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, this.active ? 0.6F : 0.5F);
 
@@ -189,7 +228,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 			tile().notifyPartChange(this);
 			tile().notifyNeighborChange(this.orientation.ordinal());
 			tile().markDirty();
-			if(this.active && this.autorelease) {
+			if(this.active && this.getAutorelease()) {
 				scheduleTick(20); //TODO: make time customizable via upgrades
 			}
 		}
@@ -220,30 +259,6 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	public int getFace() {
 		return this.orientation.ordinal();
 	}
-
-	@Override
-	public void save(NBTTagCompound tag) {
-		this.writeToNBT(tag);
-	}
-
-	@Override
-	public void load(NBTTagCompound tag) {
-		this.readFromNBT(tag);
-	}
-
-	@Override
-	public void writeDesc(MCDataOutput packet) {
-		NBTTagCompound tag = new NBTTagCompound();
-		this.save(tag);
-		packet.writeNBTTagCompound(tag);
-	}
-
-	@Override
-	public void readDesc(MCDataInput packet) {
-		NBTTagCompound tag = new NBTTagCompound();
-		tag = packet.readNBTTagCompound();
-		this.load(tag);
-	}
 	
 	@Override
 	public boolean renderStatic(Vector3 pos, int pass) {
@@ -257,7 +272,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 
 	@Override
 	public int getLightValue() {
-		return this.lamp && this.active ? 7 : 0;
+		return this.getLampOn() ? 7 : 0;
 	}
 
 	@Override
@@ -285,7 +300,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 
 	@Override
 	public void scheduledTick() {
-		if(this.active && this.autorelease) {
+		if(this.active && this.getAutorelease()) {
 			this.active = false;
 			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, 0.5F);
 
@@ -311,7 +326,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	@Optional.Method(modid = "ComputerCraft")
 	@Override
 	public String[] getMethodNames() {
-		return new String[] { "test" };
+		return new String[] { "getPressed", "setPressed", "getLamp", "setLamp", "configureAutoRelease", "configureAutoLamp" };
 	}
 
 	@Optional.Method(modid = "ComputerCraft")
@@ -319,22 +334,63 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		switch(method)
 		{
-			case 0:
-				return new Object[] {"This is working"};
+			case 0: // getPressed
+				//TODO: check parameters
+				return new Object[] { this.active };
+			case 1: // setPressed
+				//TODO: check parameters
+				boolean newstate = (Boolean)arguments[0];
+				if(newstate != this.active) {
+					this.active = newstate;
+					world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "random.click", 0.3F, this.active ? 0.6F : 0.5F);
+					sendDescUpdate();
+					tile().notifyPartChange(this);
+					tile().notifyNeighborChange(this.orientation.ordinal());
+					tile().markDirty();
+					return new Object[] { };
+				}
+			case 2: // getLamp
+				//TODO: check parameters
+				return new Object[] { this.computer_lamp_on };
+			case 3: // setLamp
+				//TODO: check parameters
+				this.computer_lamp_on = (Boolean)arguments[0];
+				sendDescUpdate();
+				tile().notifyPartChange(this);
+				tile().notifyNeighborChange(this.orientation.ordinal());
+				tile().markDirty();
+				return new Object[] { };
+			case 4: // configureAutoRelease
+				//TODO: check parameters
+				this.computer_autorelease = (Boolean)arguments[0];
+				sendDescUpdate();
+				tile().notifyPartChange(this);
+				tile().markDirty();
+				this.scheduledTick();
+				return new Object[] { };
+			case 5: // configureAutoLamp
+				this.computer_lamp_auto = (Boolean)arguments[0];
+				sendDescUpdate();
+				tile().notifyPartChange(this);
+				tile().notifyNeighborChange(this.orientation.ordinal());
+				tile().markDirty();
+				return new Object[] { };
 			default:
-				System.out.println("Attempted to call unknown method with computer ID " + computer.getID());
-				return new Object[] {"Unknown command."};
+				System.out.println("Attempted to call unknown method from computer with ID " + computer.getID());
+				return new Object[] { "Unknown method" };
 		}
 	}
 
 	@Optional.Method(modid = "ComputerCraft")
 	@Override
 	public void attach(IComputerAccess computer) {
+		this.computer_control++;
 	}
 
 	@Optional.Method(modid = "ComputerCraft")
 	@Override
 	public void detach(IComputerAccess computer) {
+		this.computer_control--;
 	}
 
 	@Optional.Method(modid = "ComputerCraft")

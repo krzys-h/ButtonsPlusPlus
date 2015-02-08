@@ -38,13 +38,13 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 		Color click_color = new Color(part.click_color);
 		if(part.active) {
 			GL11.glTranslatef(0F, -0.125F, 0F);
-			if(part.lamp) {
-				//TODO: make this look more AWESOME :P
-				Color lamp_color = new Color(part.lamp_color);
-				click_color.setRf(0.5F * click_color.getRf() + 0.5F * lamp_color.getRf());
-				click_color.setGf(0.5F * click_color.getGf() + 0.5F * lamp_color.getGf());
-				click_color.setBf(0.5F * click_color.getBf() + 0.5F * lamp_color.getBf());
-			}
+		}
+		if(part.getLampOn()) {
+			//TODO: make this look more AWESOME :P
+			Color lamp_color = new Color(part.lamp_color);
+			click_color.setRf(0.5F * click_color.getRf() + 0.5F * lamp_color.getRf());
+			click_color.setGf(0.5F * click_color.getGf() + 0.5F * lamp_color.getGf());
+			click_color.setBf(0.5F * click_color.getBf() + 0.5F * lamp_color.getBf());
 		}
 		GL11.glColor3f(click_color.getRf(), click_color.getGf(), click_color.getBf());
 		IModelCustom click_model = ModelLibrary.getModel("click", part.click);
