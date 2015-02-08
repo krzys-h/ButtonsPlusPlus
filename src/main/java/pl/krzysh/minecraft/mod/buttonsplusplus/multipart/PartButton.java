@@ -26,8 +26,14 @@ import codechicken.multipart.IFaceRedstonePart;
 import codechicken.multipart.TileMultipart;
 import codechicken.multipart.minecraft.McBlockPart;
 import codechicken.multipart.minecraft.McSidedMetaPart;
+import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 
-public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
+@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft")
+public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IPeripheral {
 	public boolean active = false;
 	public ForgeDirection orientation = ForgeDirection.NORTH;
 	public float size = 0.5f;
@@ -46,13 +52,8 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 		super();
 	}
 
-	//TODO: is it needed?
-	private PartButton(int meta) {
-		super(meta);
-	}
-
 	public PartButton(ForgeDirection orientation, ItemStack item) {
-		super(0);
+		super();
 		this.orientation = orientation;
 		this.fromItem(item);
 	}
@@ -116,6 +117,7 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 	}
 
 	@Override
+	// Also used by ComputerCraft (method name conflicts...)
 	public String getType() {
 		return Names.MultiParts.BUTTON;
 	}
@@ -304,5 +306,40 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart {
 	public IIcon getBrokenIcon(int side)
 	{
 		return null; //TODO
+	}
+
+	@Optional.Method(modid = "ComputerCraft")
+	@Override
+	public String[] getMethodNames() {
+		return new String[] { "test" };
+	}
+
+	@Optional.Method(modid = "ComputerCraft")
+	@Override
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+		switch(method)
+		{
+			case 0:
+				return new Object[] {"This is working"};
+			default:
+				System.out.println("Attempted to call unknown method with computer ID " + computer.getID());
+				return new Object[] {"Unknown command."};
+		}
+	}
+
+	@Optional.Method(modid = "ComputerCraft")
+	@Override
+	public void attach(IComputerAccess computer) {
+	}
+
+	@Optional.Method(modid = "ComputerCraft")
+	@Override
+	public void detach(IComputerAccess computer) {
+	}
+
+	@Optional.Method(modid = "ComputerCraft")
+	@Override
+	public boolean equals(IPeripheral other) {
+		return this == other;
 	}
 }

@@ -24,6 +24,11 @@ repositories {
         name = "mobius"
         url = "http://mobiusstrip.eu/maven"
     }
+    
+    ivy {
+        name "ComputerCraft"
+        artifactPattern "http://addons.cursecdn.com/files/2216/236/[module][revision].[ext]"
+    }
 }
 
 apply plugin: 'forge'
@@ -44,6 +49,12 @@ jar {
 	}
 }
 
+configurations {
+    provided
+    embedded
+    compile.extendsFrom provided, embedded
+}
+
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -59,13 +70,14 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // Required by the mod:
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.127:dev"
-    compile "codechicken:ForgeMultipart:1.7.10-1.1.1.321:dev"
+    provided "codechicken:CodeChickenLib:1.7.10-1.1.3.127:dev"
+    provided "codechicken:ForgeMultipart:1.7.10-1.1.1.321:dev"
   
-    // For development:
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.4.35:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.4.83:dev"
-    compile "mcp.mobius.waila:Waila:1.5.8a_1.7.10:dev"
+    // For API integration
+    provided "codechicken:CodeChickenCore:1.7.10-1.0.4.35:dev"
+    provided "codechicken:NotEnoughItems:1.7.10-1.0.4.83:dev"
+    provided "mcp.mobius.waila:Waila:1.5.8a_1.7.10:dev"
+    provided name: "ComputerCraft", version: "1.65", ext: "jar"
 }
 
 processResources

@@ -3,8 +3,10 @@ package pl.krzysh.minecraft.mod.buttonsplusplus;
 import pl.krzysh.minecraft.mod.buttonsplusplus.crafting.Crafting;
 import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModItems;
 import pl.krzysh.minecraft.mod.buttonsplusplus.init.ModParts;
+import pl.krzysh.minecraft.mod.buttonsplusplus.integration.IntegrationComputerCraft;
 import pl.krzysh.minecraft.mod.buttonsplusplus.proxy.IProxy;
 import pl.krzysh.minecraft.mod.buttonsplusplus.reference.Version;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -32,6 +34,9 @@ public class ButtonsPlusPlus {
 	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 		Crafting.init();
+		
+		if(Loader.isModLoaded("ComputerCraft"))
+			IntegrationComputerCraft.init();
 	}
 
 	@EventHandler

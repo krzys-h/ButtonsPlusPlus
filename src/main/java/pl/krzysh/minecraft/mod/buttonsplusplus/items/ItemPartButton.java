@@ -34,6 +34,7 @@ public class ItemPartButton extends JItemMultiPart {
 		return PartButton.placement(world, pos, side, stack);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
 		//TODO: Do we really want 16*16*2*17 items in the creative tab?
@@ -56,6 +57,7 @@ public class ItemPartButton extends JItemMultiPart {
 		list.add(stack);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
 		if(itemstack.stackTagCompound != null) {
