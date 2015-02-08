@@ -67,6 +67,7 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 	}
 
 	// "Stolen" from https://github.com/pahimar/Equivalent-Exchange-3/blob/4230e778060bbe451ec2e4e7cf9de50253bd495b/src/main/java/com/pahimar/ee3/client/renderer/tileentity/TileEntityRendererAludel.java#L89-L115 ;)
+	// With some modifications for up and down
 	private void scaleTranslateRotate(double x, double y, double z, ForgeDirection orientation) {
 		if(orientation == ForgeDirection.NORTH) {
 			GL11.glTranslated(x + 1, y, z);
@@ -84,6 +85,11 @@ public class ButtonRenderer implements IItemRenderer, IPartRenderer {
 			GL11.glTranslated(x, y, z);
 			GL11.glRotatef(-90F, 0F, 1F, 0F);
 			GL11.glRotatef(-90F, 1F, 0F, 0F);
+		} else if(orientation == ForgeDirection.UP) {
+			GL11.glTranslated(x, y+1, z+1);
+			GL11.glRotatef(180F, 1F, 0F, 0F);
+		} else if(orientation == ForgeDirection.DOWN) {
+			GL11.glTranslated(x, y, z);
 		}
 	}
 

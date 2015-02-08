@@ -181,6 +181,12 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 		if(this.orientation == ForgeDirection.SOUTH) {
 			return new Cuboid6(side_margin, side_margin, 1F - front, 1F - side_margin, 1F - side_margin, 1F);
 		}
+		if(this.orientation == ForgeDirection.UP) {
+			return new Cuboid6(side_margin, 1F, side_margin, 1F - side_margin, 1F-front, 1F - side_margin);
+		}
+		if(this.orientation == ForgeDirection.DOWN) {
+			return new Cuboid6(side_margin, 0F, side_margin, 1F - side_margin, front, 1F - side_margin);
+		}
 
 		return null;
 	}
@@ -198,9 +204,6 @@ public class PartButton extends McSidedMetaPart implements IFaceRedstonePart, IP
 	}
 
 	public static McBlockPart placement(World world, BlockCoord pos, int side, ItemStack stack) {
-		if(side == 0 || side == 1)
-			return null;
-
 		if(stack.stackTagCompound == null)
 			return null;
 
